@@ -1,0 +1,219 @@
+<!-- Add logging -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <title>D3 Spatial Grid</title>
+
+
+    <!-- load D3 -->
+    <script src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+
+    <!-- v7: load jQuery (bundled with Jupyter; only needed outside of Jupyter) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- v7: load jQuery md5 plugin -->
+    <!-- <script src="../../jquery.md5.js"></script> -->
+    <script src="https://rawcdn.githack.com/placemarker/jQuery-MD5/b985fce4e867773e5fb7a29b4fb5df74c53595d0/jquery.md5.js"></script>
+
+    <!-- global styles -->
+    <style>
+      body   { font-family: helvetica, sans-serif;
+               -moz-user-select: none;
+               -webkit-user-select: none;
+               -ms-user-select: none;
+               user-select: none; }
+    </style>
+  </head>
+
+  <body>
+    <svg id="dresser" data-name="dresser" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 280" width="600" height="600">
+      <defs>
+        <style>
+          .cls-1{ fill:#eef0d9; }
+          .cls-2{ fill:#fcffe7; }
+        </style>
+      </defs>
+      <rect class="cls-1" x="12.34" y="15.9" width="355.33" height="237.28"/>
+      <path d="M367.16,16.4V252.67H12.84V16.4H367.16m1-1H11.84V253.67H368.16V15.4Z"/>
+      <polygon class="cls-1" points="12.34 275.04 12.34 253.08 34.03 253.08 24.62 275.04 12.34 275.04"/>
+      <path d="M33.27,253.58l-9,20.95H12.84V253.58H33.27m1.52-1H11.84v22.95H25l9.84-22.95Z"/>
+      <polygon class="cls-1" points="12.07 15.99 3.06 4.96 376.94 4.96 367.93 15.99 12.07 15.99"/>
+      <path d="M375.89,5.47l-8.2,10H12.31l-8.2-10H375.89m2.11-1H2l9.84,12H368.16l9.84-12Z"/>
+      <polygon class="cls-1" points="355.38 275.04 345.97 253.08 367.66 253.08 367.66 275.04 355.38 275.04"/>
+      <path d="M367.16,253.58v20.95H355.71l-9-20.95h20.43m1-1h-23l9.84,22.95h13.11V252.58Z"/>
+      <rect class="cls-2" x="19.99" y="22.45" width="80.98" height="44.91"/>
+      <path d="M100.47,23V66.86h-80V23h80m1-1h-82V67.86h82V22Z"/>
+      <rect class="cls-2" x="27.64" y="30.1" width="65.67" height="29.6"/>
+      <path d="M92.81,30.6V59.21H28.14V30.6H92.81m1-1H27.14V60.21H93.81V29.6Z"/>
+      <circle cx="60.48" cy="44.91" r="4.37"/>
+      <rect class="cls-2" x="106.34" y="22.45" width="80.98" height="44.91"/>
+      <path d="M186.81,23V66.86h-80V23h80m1-1h-82V67.86h82V22Z"/>
+      <rect class="cls-2" x="113.99" y="30.1" width="65.67" height="29.6"/>
+      <path d="M179.16,30.6V59.21H114.49V30.6h64.67m1-1H113.49V60.21h66.67V29.6Z"/>
+      <circle cx="146.83" cy="44.91" r="4.37"/>
+      <rect class="cls-2" x="192.69" y="22.45" width="80.98" height="44.91"/>
+      <path d="M273.16,23V66.86h-80V23h80m1-1h-82V67.86h82V22Z"/>
+      <rect class="cls-2" x="200.34" y="30.1" width="65.67" height="29.6"/>
+      <path d="M265.51,30.6V59.21H200.84V30.6h64.67m1-1H199.84V60.21h66.67V29.6Z"/>
+      <circle cx="233.17" cy="44.91" r="4.37"/>
+      <rect class="cls-2" x="279.04" y="22.45" width="80.98" height="44.91"/>
+      <path d="M359.51,23V66.86h-80V23h80m1-1h-82V67.86h82V22Z"/>
+      <rect class="cls-2" x="286.69" y="30.1" width="65.67" height="29.6"/>
+      <path d="M351.86,30.6V59.21H287.19V30.6h64.67m1-1H286.19V60.21h66.67V29.6Z"/>
+      <circle cx="319.52" cy="44.91" r="4.37"/>
+      <rect class="cls-2" x="19.44" y="72.73" width="167.33" height="44.91"/>
+      <path d="M186.27,73.23v43.91H19.94V73.23H186.27m1-1H18.94v45.91H187.27V72.23Z"/>
+      <rect class="cls-2" x="35.6" y="80.38" width="135.02" height="29.6"/>
+      <path d="M170.11,80.88v28.61H36.1V80.88h134m1-1H35.1v30.61h136V79.88Z"/>
+      <circle cx="54.47" cy="95.19" r="4.37"/>
+      <circle cx="151.74" cy="95.19" r="4.37"/>
+      <rect class="cls-2" x="193.23" y="72.73" width="167.33" height="44.91"/>
+      <path d="M360.06,73.23v43.91H193.73V73.23H360.06m1-1H192.73v45.91H361.06V72.23Z"/>
+      <rect class="cls-2" x="209.39" y="80.38" width="135.02" height="29.6"/>
+      <path d="M343.9,80.88v28.61h-134V80.88h134m1-1h-136v30.61h136V79.88Z"/>
+      <rect class="cls-2" x="19.44" y="123.01" width="167.33" height="44.91"/>
+      <path d="M186.27,123.51v43.91H19.94V123.51H186.27m1-1H18.94v45.91H187.27V122.51Z"/>
+      <rect class="cls-2" x="35.6" y="130.66" width="135.02" height="29.6"/>
+      <path d="M170.11,131.16v28.61H36.1V131.16h134m1-1H35.1v30.61h136V130.16Z"/>
+      <rect class="cls-2" x="19.44" y="173.29" width="167.33" height="66.77"/>
+      <path d="M186.27,173.79v65.77H19.94V173.79H186.27m1-1H18.94v67.77H187.27V172.79Z"/>
+      <rect class="cls-2" x="35.6" y="184.58" width="135.02" height="44.18"/>
+      <path d="M170.11,185.09v43.17H36.1V185.09h134m1-1H35.1v45.17h136V184.09Z"/>
+      <rect class="correct cls-2" x="193.23" y="173.29" width="167.33" height="66.77"/>
+      <path class="correct" d="M360.06,173.79v65.77H193.73V173.79H360.06m1-1H192.73v67.77H361.06V172.79Z"/>
+      <rect class="correct cls-2" x="209.39" y="184.58" width="135.02" height="44.18"/>
+      <path class="correct" d="M343.9,185.09v43.17h-134V185.09h134m1-1h-136v45.17h136V184.09Z"/>
+      <circle cx="54.47" cy="145.47" r="4.37"/>
+      <circle cx="151.74" cy="145.47" r="4.37"/>
+      <circle cx="54.47" cy="206.67" r="4.37"/>
+      <circle cx="151.74" cy="206.67" r="4.37"/>
+      <circle cx="229.35" cy="95.19" r="4.37"/>
+      <rect class="cls-2" x="193.23" y="123.01" width="167.33" height="44.91"/>
+      <path d="M360.06,123.51v43.91H193.73V123.51H360.06m1-1H192.73v45.91H361.06V122.51Z"/>
+      <rect class="cls-2" x="209.39" y="130.66" width="135.02" height="29.6"/>
+      <path d="M343.9,131.16v28.61h-134V131.16h134m1-1h-136v30.61h136V130.16Z"/>
+      <circle cx="326.63" cy="95.19" r="4.37"/>
+      <circle cx="229.35" cy="145.47" r="4.37"/>
+      <circle cx="326.63" cy="145.47" r="4.37"/>
+      <circle class="correct" cx="229.35" cy="206.67" r="4.37"/>
+      <circle class="correct" cx="326.63" cy="206.67" r="4.37"/>
+    </svg>
+
+    <script>
+      var body = d3.select("body");
+      var svg = d3.select("#dresser");
+      var open = false;
+      var done = false;
+
+      // v7: variables for logging
+      var username = location.href.split('/')[4];
+      var username_hash = $.md5(username);
+      var user_agent_hash = $.md5(navigator.userAgent);
+      var answer
+
+      // var url_pre = "http://100.64.8.23:5011/"+username+"/"+user_agent_hash+"/geospatial-data/beginner/Q4/";
+      var url_pre = "https://check.hourofci.org:4000/"+username_hash+"/"+user_agent_hash+"/geospatial-data/beginner/Q4/";
+
+      // draw side of drawer
+      var side = svg.append("rect")
+        .attr("width", 12).attr("height", 50)
+        .attr("x", 191).attr("y", 120)
+        .attr("fill", " #4d2600").attr("stroke", "black")
+        .attr("transform", "skewY(20)")
+        .style("display", "none");
+
+      // draw hippo
+      var hippo = svg.append("image").attr("xlink:href", "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/geospatial-data/supplementary/hippo.svg")
+        .attr("width", 90).attr("height", 80)
+        .attr("x", 270).attr("y", 105)
+        .style("display", "none");
+
+      // v7
+      var incorrect = d3.select('svg').selectAll("*:not(.correct)").on("click", function() {
+        // log "False" when click incorrect space
+        answer = "False"
+        url = url_pre+answer;
+        // $.get(url)
+        $.ajax({
+          type: 'GET',
+          url: url,
+          success: function() {
+            console.log("Answer is false");
+          },
+          error: function() {
+            alert("Error");
+          }
+        });
+      });
+
+      var correct = d3.selectAll(".correct").on("click", function() {
+        if (!open) {
+          // show side and hippo
+          side.style("display", null);
+          hippo.style("display", null);
+
+          // "pull" drawer
+          correct.attr("transform", "translate(10,10)");
+
+          // v7: log "True" when click the correct space
+          answer = "True";
+          url = url_pre+answer;
+          // $.get(url)
+
+          $.ajax({
+            type: 'GET',
+            url: url,
+            success: function() {
+              console.log("Answer is true");
+            },
+            error: function() {
+              alert("Error");
+            }
+          });
+
+          // display message if first completion
+          if (!done) {
+            success();
+            done = true;
+          }
+
+          // open drawer
+          open = true;
+        } else {
+          // hide side and hippo
+          side.style("display", "none");
+          hippo.style("display", "none");
+
+          // "push" drawer
+          correct.attr("transform", "translate(0,0)");
+
+          // close drawer
+          open = false;
+        }
+      });
+
+      // success animation
+      function success() {
+        svg.append("text").text("Nice!")
+          .classed("success", true)
+          .attr("x", 180)
+          .attr("y", 175)
+          .attr("fill", "lime")
+          .attr("fill-opacity", 0)
+          .attr("stroke", "black")
+          .attr("stroke-width", 1.2)
+          .attr("stroke-opacity", 0)
+          .attr("font-size", 40)
+          .transition().duration(800)
+            .attr("fill-opacity", 1)
+            .attr("stroke-opacity", 1)
+          .transition().duration(1500)
+            .attr("fill-opacity", 0)
+            .attr("stroke-opacity", 0);
+      }
+    </script>
+  </body>
+</html>
