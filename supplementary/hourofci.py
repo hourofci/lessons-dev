@@ -45,9 +45,10 @@ def SubmitBtn(user_agent,lesson,lesson_level,question,widget):
         answer = widget.value
 
         # v6 - Retrieve username
-        # username = str(getpass.getuser())
-        #username = str(getpass.getuser()).split('-')[1] # In Jupyterhub, getuser() = Jupyter-username
-		username = str(getpass.getuser())
+        if str(getpass.getuser()).split('-')[0] == "jupyter":
+            username = str(getpass.getuser()).split('-')[1] # In Jupyterhub, getuser() = Jupyter-username
+        else:
+            username = str(getpass.getuser())
         # v7 - Encode username
         username_hash = hashlib.md5(username.encode()).hexdigest()
 
@@ -111,8 +112,10 @@ def RunBtn(user_agent,lesson,lesson_level,nbfilename,code_tag):
         port = "4000" 
 
         # Retrieve username
-        username = str(getpass.getuser())
-        # username = str(getpass.getuser()).split('-')[1] # In Jupyterhub, getuser() = Jupyter-username
+        if str(getpass.getuser()).split('-')[0] == "jupyter":
+            username = str(getpass.getuser())
+        else:
+            username = str(getpass.getuser()).split('-')[1] # In Jupyterhub, getuser() =jupyter-username
         # Encode username
         username_hash = hashlib.md5(username.encode()).hexdigest()
 
