@@ -43,6 +43,8 @@ function ($) {
         toggle();
     });
     
+    // hide output indicator (e.g. `Out [4]:`)
+    $(".output_prompt").css("opacity", 0);
     
     // logging
     // retrieve info variables
