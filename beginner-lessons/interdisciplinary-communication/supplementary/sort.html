@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <title>D3 Jargon Sort</title>
+
+    <!-- load D3 -->
+    <script src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+
+    <!-- global styles -->
+    <style>
+      body { font-family: Helvetica; }
+      svg  { -moz-user-select: none;
+             -webkit-user-select: none;
+             -ms-user-select: none;
+             user-select: none;
+           }
+    </style>
+  </head>
+
+  <body>
+    <script>
+      var body = d3.select("body");
+      var svg = body.append("svg")
+        .attr("width", 700)
+        .attr("height", 500);
+
+      // possible terms to be sorted
+      var terms = ["Isolating Non-Experts",
+                   "Othering",
+                   "Confusion",
+                   "Excluding People Without Topic Knowledge",
+                   "Boredom",
+                   "Frustration",
+                   "Shutting Down Conversation",
+                   "Connection to Broader Literature",
+                   "Expressing Complexity Directly",
+                   "Connecting to Existing Conversations",
+                   "Shortening Extensive Background",
+                   "Indicating Subject Knowledge",
+                   "Simplifying Complex Ideas",
+                   "Signaling Topic Familiarity"];
+
+      // counters for bin terms
+      iLeft = 1;
+      iRight = 1;
+
+      var checked = false;
+
+      // final message (hidden until complete)
+      var finish = svg.append("text")
+        .text("")
+        .attr("x", 80)
+        .attr("y", 100)
+        .attr("font-size", 20)
+        .attr("fill-opacity", 0)
+        .style("fill", "#32C90F");
+
+      // response message
+      var msg = body.append("p").text("");
+
+      var drag = d3.drag()
+        .on("start", function () {
+          var cur = d3.select(this);
+          dx = cur.attr("x") - d3.event.x;
+          dy = cur.attr("y") - d3.event.y;
+        })
+        .on("drag", function() {
+          d3.select(this)
+            .attr("x", d3.event.x + dx)
+            .attr("y", d3.event.y + dy);
+        })
+        // check solution for current word
+        .on("end", function() {
+          d3.select(this)
+            .attr("x", d3.event.x + dx)
+            .attr("y", d3.event.y + dy);
+
+          var x = d3.select(this).attr("x");
+          var y = d3.select(this).attr("y");
+          var text = d3.select(this).select("text")._groups[0][0].innerHTML;
+
+          // prevent out of bounds
+          if (x < -175) {
+            d3.select(this).attr("x", -175);
+            checked = true;
+            checkLeft(text);
+          }
+          if (x > 175) {
+            d3.select(this).attr("x", 175);
+            checked = true;
+            checkRight(text);
+          }
+          if (y < -60) {
+            d3.select(this).attr("y", -60);
+          }
+          if (y > 370) {
+            d3.select(this).attr("y", 370);
+          }
+
+          console.log(x); console.log(y);
+
+          if (!checked) {
+            // check solution: left bin
+            if (x >= -310 && x <= -60 && y <= 350 && y >= 100) {
+              checkLeft(text);
+            }
+            // check solution: right bin
+            if (x >= 60 && x <= 380 && y <= 350 && y >= 100) {
+              checkRight(text);
+            }
+            checked = false;
+          }
+        });
+
+      // left bin: benefits/assets
+      svg.append("rect")
+        .attr("width", 330)
+        .attr("height", 280)
+        .attr("x", 5)
+        .attr("y", 170)
+        .attr("fill", "none")
+        .attr("stroke", "blue")
+        .attr("stroke-width", "4px");
+      // bin title
+      svg.append("text")
+        .text("Benefits/Assets")
+        .attr("x", 80)
+        .attr("y", 205)
+        .attr("fill", "blue")
+        .attr("font-size", 26);
+      // slots (empty until filled)
+      svg.append("text")
+        .text("")
+        .attr("id", "left1")
+        .attr("text-anchor", "middle")
+        .attr("x", 170)
+        .attr("y", 250)
+        .attr("fill", "blue")
+        .attr("font-size", 16);
+      svg.append("text")
+        .text("")
+        .attr("id", "left2")
+        .attr("text-anchor", "middle")
+        .attr("x", 170)
+        .attr("y", 280)
+        .attr("fill", "blue")
+        .attr("font-size", 16);
+      svg.append("text")
+        .text("")
+        .attr("id", "left3")
+        .attr("text-anchor", "middle")
+        .attr("x", 170)
+        .attr("y", 310)
+        .attr("fill", "blue")
+        .attr("font-size", 16);
+      svg.append("text")
+        .text("")
+        .attr("id", "left4")
+        .attr("text-anchor", "middle")
+        .attr("x", 170)
+        .attr("y", 340)
+        .attr("fill", "blue")
+        .attr("font-size", 16);
+      svg.append("text")
+        .text("")
+        .attr("id", "left5")
+        .attr("text-anchor", "middle")
+        .attr("x", 170)
+        .attr("y", 370)
+        .attr("fill", "blue")
+        .attr("font-size", 16);
+      svg.append("text")
+        .text("")
+        .attr("id", "left6")
+        .attr("text-anchor", "middle")
+        .attr("x", 170)
+        .attr("y", 400)
+        .attr("fill", "blue")
+        .attr("font-size", 16);
+      svg.append("text")
+        .text("")
+        .attr("id", "left7")
+        .attr("text-anchor", "middle")
+        .attr("x", 170)
+        .attr("y", 430)
+        .attr("fill", "blue")
+        .attr("font-size", 16);
+
+      // right bin: drawbacks/barriers
+      svg.append("rect")
+        .attr("width", 330)
+        .attr("height", 280)
+        .attr("x", 345)
+        .attr("y", 170)
+        .attr("fill", "none")
+        .attr("stroke", "red")
+        .attr("stroke-width", "4px");
+      // bin title
+      svg.append("text")
+        .text("Drawbacks/Barriers")
+        .attr("x", 395)
+        .attr("y", 205)
+        .attr("fill", "red")
+        .attr("font-size", 26);
+      // slots (empty until filled)
+      svg.append("text")
+        .text("")
+        .attr("id", "right1")
+        .attr("text-anchor", "middle")
+        .attr("x", 510)
+        .attr("y", 250)
+        .attr("fill", "red")
+        .attr("font-size", 16);
+      svg.append("text")
+        .text("")
+        .attr("id", "right2")
+        .attr("text-anchor", "middle")
+        .attr("x", 510)
+        .attr("y", 280)
+        .attr("fill", "red")
+        .attr("font-size", 16);
+      svg.append("text")
+        .text("")
+        .attr("id", "right3")
+        .attr("text-anchor", "middle")
+        .attr("x", 510)
+        .attr("y", 310)
+        .attr("fill", "red")
+        .attr("font-size", 16);
+      svg.append("text")
+        .text("")
+        .attr("id", "right4")
+        .attr("text-anchor", "middle")
+        .attr("x", 510)
+        .attr("y", 340)
+        .attr("fill", "red")
+        .attr("font-size", 16);
+      svg.append("text")
+        .text("")
+        .attr("id", "right5")
+        .attr("text-anchor", "middle")
+        .attr("x", 510)
+        .attr("y", 370)
+        .attr("fill", "red")
+        .attr("font-size", 16);
+      svg.append("text")
+        .text("")
+        .attr("id", "right6")
+        .attr("text-anchor", "middle")
+        .attr("x", 510)
+        .attr("y", 400)
+        .attr("fill", "red")
+        .attr("font-size", 16);
+      svg.append("text")
+        .text("")
+        .attr("id", "right7")
+        .attr("text-anchor", "middle")
+        .attr("x", 510)
+        .attr("y", 430)
+        .attr("fill", "red")
+        .attr("font-size", 16);
+
+      // draw term from "deck" for placement
+      function drawCard() {
+        d3.selectAll(".drawn")
+          .transition().duration(800)
+            .attr("fill-opacity", 0)
+            .attr("stroke-opacity", 0)
+          .remove();
+
+        // draw random term from selection
+        var t = terms[Math.floor(Math.random() * terms.length)];
+
+        // nested SVG for drag translation
+        var card = svg.append("svg").classed("card", true);
+
+        // while terms are still left in array, draw card
+        if (terms && terms.length) {
+          // card frame
+          card.append("rect")
+            .classed("drawn", true)
+            .attr("width", 320)
+            .attr("height", 50)
+            .attr("x", 180)
+            .attr("y", 70)
+            .attr("fill", "white")
+            .attr("stroke", "black")
+            .attr("fill-opacity", 1)
+            .attr("stroke-opacity", 1)
+            .attr("stroke-width", "4px");
+
+          // card text
+          card.append("text")
+            .classed("drawn", true)
+            .text(t)
+            .attr("text-anchor", "middle")
+            .attr("fill-opacity", 1)
+            .attr("stroke-opacity", 1)
+            .attr("x", 340)
+            .attr("y", 100);
+        } else {
+          finish.transition().duration(800)
+            .text("Congratulations! You've properly sorted each jargon outcome.")
+            .attr("fill-opacity", 1);
+        }
+
+        // remove selected element from array
+        terms = terms.filter(function(item) { return item !== t; });
+
+        // enable dragging of the card
+        drag(d3.selectAll(".card"));
+      }
+
+      function fillLeft(e) {
+        d3.select("#left" + iLeft).text(e);
+        iLeft++;
+      }
+
+      function fillRight(e) {
+        d3.select("#right" + iRight).text(e);
+        iRight++;
+      }
+
+      // left bin solution checking
+      function checkLeft(e) {
+        if (e === "Isolating Non-Experts") {
+          msg.transition().duration(800).text("No, this isn't a benefit or asset of using jargon. Try again!")
+            .style("color", "red");
+        } else if (e === "Othering") {
+          msg.transition().duration(800).text("No, this isn't a benefit or asset of using jargon. Try again!")
+            .style("color", "red");
+        } else if (e === "Confusion") {
+          msg.transition().duration(800).text("No, this isn't a benefit or asset of using jargon. Try again!")
+            .style("color", "red");
+        } else if (e === "Excluding People Without Topic Knowledge") {
+          msg.transition().duration(800).text("No, this isn't a benefit or asset of using jargon. Try again!")
+            .style("color", "red");
+        } else if (e === "Boredom") {
+          msg.transition().duration(800).text("No, this isn't a benefit or asset of using jargon. Try again!")
+            .style("color", "red");
+        } else if (e === "Frustration") {
+          msg.transition().duration(800).text("No, this isn't a benefit or asset of using jargon. Try again!")
+            .style("color", "red");
+        } else if (e === "Shutting Down Conversation") {
+          msg.transition().duration(800).text("No, this isn't a benefit or asset of using jargon. Try again!")
+            .style("color", "red");
+        } else if (e === "Connection to Broader Literature") {
+          msg.transition().duration(800).text("Correct! Jargon allows us to connect to broader and bigger ideas in a domain.")
+            .style("color", "#32C90F");
+          drawCard();
+          fillLeft(e);
+        } else if (e === "Expressing Complexity Directly") {
+          msg.transition().duration(800).text("Correct! Jargon helps us to represent complex ideas with direct terminology and naming.")
+            .style("color", "#32C90F");
+          drawCard();
+          fillLeft(e);
+        } else if (e === "Connecting to Existing Conversations") {
+          msg.transition().duration(800).text("Correct! Jargon can connect us to existing conversations by using similar ideas, thoeries, or concepts across ideas.")
+            .style("color", "#32C90F");
+          drawCard();
+          fillLeft(e);
+        } else if (e === "Shortening Extensive Background") {
+          msg.transition().duration(800).text("Correct! Jargon can shorten the background information we need for a given conversation by quickly stating relevant ideas.")
+            .style("color", "#32C90F");
+          drawCard();
+          fillLeft(e);
+        } else if (e === "Indicating Subject Knowledge") {
+          msg.transition().duration(800).text("Correct! Jargon can be an indication of knowledge, allowing for representation of domain concepts and ideas.")
+            .style("color", "#32C90F");
+          drawCard();
+          fillLeft(e);
+        } else if (e === "Simplifying Complex Ideas") {
+          msg.transition().duration(800).text("Correct! Jargon can simplify complex ideas by summarizing conversations, theories, or domains in more direct terms.")
+            .style("color", "#32C90F");
+          fillLeft(e);
+          drawCard();
+        } else if (e === "Signaling Topic Familiarity") {
+          msg.transition().duration(800).text("Correct! Jargon provides a signal of familiarity for a topic, which could allow a conversation or collaboration to reach more advanced levels.")
+            .style("color", "#32C90F");
+          fillLeft(e);
+          drawCard();
+        }
+      }
+
+      // right bin solution checking
+      function checkRight(e) {
+        if (e === "Isolating Non-Experts") {
+          msg.transition().duration(800).text("Correct! Isolation can occur often when jargon is used in the wrong context.")
+            .style("color", "#32C90F");
+          drawCard();
+          fillRight(e);
+        } else if (e === "Othering") {
+          msg.transition().duration(800).text("Correct! Othering, or making people feel like they don't belong, can occur when jargon is used in the wrong context.")
+            .style("color", "#32C90F");
+          drawCard();
+          fillRight(e);
+        } else if (e === "Confusion") {
+          msg.transition().duration(800).text("Correct! Confusion is certainly a possible outcome of using jargon.")
+            .style("color", "#32C90F");
+          drawCard();
+          fillRight(e);
+        } else if (e === "Excluding People Without Topic Knowledge") {
+          msg.transition().duration(800).text("Correct! People without expert topic knowledge are certainly excluded from conversations where jargon is used.")
+            .style("color", "#32C90F");
+          drawCard();
+          fillRight(e);
+        } else if (e === "Boredom") {
+          msg.transition().duration(800).text("Correct! Boredom can certainly occurr when jargon is overused.")
+            .style("color", "#32C90F");
+          drawCard();
+          fillRight(e);
+        } else if (e === "Frustration") {
+          msg.transition().duration(800).text("Correct! Frustration is a natural feeling when jargon is used and someone can't understand the topic at hand.")
+            .style("color", "#32C90F");
+          drawCard();
+          fillRight(e);
+        } else if (e === "Shutting Down Conversation") {
+          msg.transition().duration(800).text("Correct! Jargon can shut down a conversation by making participants feel unable to keep up with the terminology.")
+            .style("color", "#32C90F");
+          drawCard();
+          fillRight(e);
+        } else if (e === "Connection to Broader Literature") {
+          msg.transition().duration(800).text("No, this isn't a drawback or a barrier in using jargon. Try again!")
+            .style("color", "red");
+        } else if (e === "Expressing Complexity Directly") {
+          msg.transition().duration(800).text("No, this isn't a drawback or a barrier in using jargon. Try again!")
+            .style("color", "red");
+        } else if (e === "Connecting to Existing Conversations") {
+          msg.transition().duration(800).text("No, this isn't a drawback or a barrier in using jargon. Try again!")
+            .style("color", "red");
+        } else if (e === "Shortening Extensive Background") {
+          msg.transition().duration(800).text("No, this isn't a drawback or a barrier in using jargon. Try again!")
+            .style("color", "red");
+        } else if (e === "Indicating Subject Knowledge") {
+          msg.transition().duration(800).text("No, this isn't a drawback or a barrier in using jargon. Try again!")
+            .style("color", "red");
+        } else if (e === "Simplifying Complex Ideas") {
+          msg.transition().duration(800).text("No, this isn't a drawback or a barrier in using jargon. Try again!")
+            .style("color", "red");
+        } else if (e === "Signaling Topic Familiarity") {
+          msg.transition().duration(800).text("No, this isn't a drawback or a barrier in using jargon. Try again!")
+            .style("color", "red");
+        }
+      }
+
+      // draw first card
+      drawCard();
+    </script>
+  </body>
+</html>

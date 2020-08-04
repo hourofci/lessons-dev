@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <title>D3 Word Cloud</title>
+
+    <!-- load D3 -->
+    <script src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+
+    <!-- global styles -->
+    <style>
+      body { font-family: Helvetica; }
+      svg  { font-family: Impact;
+             -moz-user-select: none;
+             -webkit-user-select: none;
+             -ms-user-select: none;
+             user-select: none;
+           }
+      p, a {
+        font-family: helvetica, sans-serif;
+        padding: 0 2px;
+      }
+      #copyright p,a {
+        display: inline;
+        font-size: 12px;
+        color: gray;
+      }
+    </style>
+  </head>
+
+  <body>
+    <svg width="740" height="350" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(270,120)scale(1.690140962600708,1.690140962600708)">
+        <text text-anchor="middle" transform="translate(115,100)rotate(0)" style="font-size: 20px; font-family: Impact; fill: rgb(107, 110, 207);">spatial</text>
+        <text text-anchor="middle" transform="translate(174,104)rotate(-14.999999999999996)" style="font-size: 20px; font-family: Impact; fill: rgb(156, 158, 222);">https</text>
+        <text text-anchor="middle" transform="translate(34,91)rotate(14.999999999999998)" style="font-size: 20px; font-family: Impact; fill: rgb(99, 121, 57);">geospatial</text>
+        <text text-anchor="middle" transform="translate(-64,39)rotate(14.999999999999998)" style="font-size: 20px; font-family: Impact; fill: rgb(206, 219, 156);">gis</text>
+        <text text-anchor="middle" transform="translate(213,73)rotate(-7.499999999999999)" style="font-size: 20px; font-family: Impact; fill: rgb(140, 109, 49);">geography</text>
+        <text text-anchor="middle" transform="translate(185,50)rotate(-7.499999999999999)" style="font-size: 20px; font-family: Impact; fill: rgb(189, 158, 57);">cyberinfrastructure</text>
+        <text text-anchor="middle" transform="translate(6,32)rotate(0)" style="font-size: 20px; font-family: Impact; fill: rgb(231, 186, 82);">cybergis</text>
+        <text text-anchor="middle" transform="translate(22,53)rotate(0)" style="font-size: 20px; font-family: Impact; fill: rgb(231, 203, 148);">interdisciplinary</text>
+        <text text-anchor="middle" transform="translate(44,10)rotate(14.999999999999998)" style="font-size: 20px; font-family: Impact; fill: rgb(132, 60, 57);">curriculum</text>
+        <text text-anchor="middle" transform="translate(99,76)rotate(7.499999999999999)" style="font-size: 20px; font-family: Impact; fill: rgb(173, 73, 74);">communication</text>
+        <text text-anchor="middle" transform="translate(-73,75)rotate(4)" style="font-size: 20px; font-family: Impact; fill: rgb(214, 97, 107);">programming</text>
+        <text text-anchor="middle" transform="translate(199,10)rotate(7.499999999999999)" style="font-size: 20px; font-family: Impact; fill: rgb(231, 150, 156);">abstraction</text>
+        <text text-anchor="middle" transform="translate(201,-35)rotate(7.499999999999999)" style="font-size: 20px; font-family: Impact; fill: rgb(123, 65, 115);">cyberliteracy</text>
+        <text text-anchor="middle" transform="translate(104,4)rotate(14.999999999999996)" style="font-size: 20px; font-family: Impact; fill: rgb(165, 81, 148);">cognition</text>
+        <text text-anchor="middle" transform="translate(-55,-10)rotate(-8)" style="font-size: 20px; font-family: Impact; fill: rgb(206, 109, 189);">spatiotemporal</text>
+        <text text-anchor="middle" transform="translate(80,-30)rotate(-6)" style="font-size: 20px; font-family: Impact; fill: rgb(222, 158, 214);">interoperability</text>
+        <text text-anchor="middle" transform="translate(165,-15)rotate(0)" style="font-size: 20px; font-family: Impact; fill: rgb(57, 59, 121);">geocomputing</text>
+        <text text-anchor="middle" transform="translate(-70,20)rotate(-7.499999999999999)" style="font-size: 20px; font-family: Impact; fill: rgb(82, 84, 163);">geovisualization</text>
+        <text text-anchor="middle" transform="translate(-50,108)rotate(4)" style="font-size: 20px; font-family: Impact; fill: rgb(107, 110, 207);">parallel computing</text>
+        <text text-anchor="middle" transform="translate(155,30)rotate(0)" style="font-size: 20px; font-family: Impact; fill: rgb(156, 158, 222);">reproducibility</text>
+      </g>
+    </svg>
+
+    <script>
+      var body = d3.select("body");
+      var activep1 = true;
+
+      // first phase of activity
+      function phaseOne() {
+        var unknown = [];
+        var u_count = unknown.length;
+
+        var list = body.append("p").attr("id", "list1");
+
+        d3.selectAll("text").on("click", function() {
+          var cur = this.innerHTML;
+
+          if (activep1) {
+            // deselect word if already selected
+            if (unknown.includes(cur)) {
+              d3.select(this).style("stroke", "none").style("opacity", 1);
+              // remove word from array
+              unknown = unknown.filter(function(item) { return item !== cur; });
+              list.text("Selected: " + unknown.join(', '));
+              u_count--;
+              // else, select and store word
+            } else {
+              if (u_count < 3) {
+                unknown.push(cur);
+                list.text("Selected: " + unknown.join(', '));
+                d3.select(this).style("stroke", "red").style("opacity", 0.4);
+                u_count++;
+              }
+            }
+
+            // display message after three words selected
+            if (u_count >= 3) {
+              activep1 = false;
+
+              // send data to parent (notebook)
+              parent.postMessage(unknown, "*");
+
+              body.append("p").style("color", "white")
+                .text("It can be difficult to have conversations, discussions, and dialogue with people from academic domains we don’t understand.")
+                .transition().style("color", "green").duration(2000);
+            }
+          }
+        });
+      }
+
+      // display copyright notice
+      body.append("br");
+      var copyright = body.append("div").attr("id", "copyright");
+      copyright.append("p").text("Uses Jason Davies' D3 Cloud library: ");
+      copyright.append("a").attr("href", "https://github.com/jasondavies/d3-cloud")
+        .text("https://github.com/jasondavies/d3-cloud");
+      copyright.append("br");
+      copyright.append("p").text("Copyright (c) 2013, Jason Davies. All rights reserved.");
+
+      // initiate phase one
+      phaseOne();
+    </script>
+  </body>
+</html>

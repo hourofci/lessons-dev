@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>D3 Fetch</title>
+
+    <!-- load D3 -->
+    <script
+        src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+
+    <!-- global styles -->
+    <style>
+        body {
+            font-family: Helvetica;
+        }
+
+        svg {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        var body = d3.select("body");
+        var svg = body.append("svg")
+            .attr("width", 700)
+            .attr("height", 500);
+
+        // execution state of phase two
+        var p2 = false;
+
+        // phase one: first stick figure
+        function phaseOne() {
+            // draw stick figure
+            svg.append("rect")
+                .transition()
+                .attr("fill", "red")
+                .attr("x", 60)
+                .attr("y", 170)
+                .attr("width", 50)
+                .attr("height", 50);
+
+            // draw speech bubble
+            svg.append("text")
+                .append("tspan").text("The general rule here is that the longer the")
+                .attr("x", 150)
+                .attr("y", 80)
+                .append("tspan").text("fetch length – that is, the more fetch within")
+                .attr("x", 153)
+                .attr("y", 105)
+                .append("tspan").text("the overall system – the more sediment")
+                .attr("x", 160)
+                .attr("y", 130)
+                .append("tspan").text("transport will be present")
+                .attr("x", 205)
+                .attr("y", 155);
+
+            // next button
+            svg.append("rect")
+                .attr("fill", "skyblue")
+                .attr("id", "nextbg")
+                .style("stroke", "black")
+                .style("stroke-width", "1.5px")
+                .attr("rx", 8)
+                .attr("ry", 8)
+                .attr("width", 60)
+                .attr("height", 25)
+                .attr("x", 520)
+                .attr("y", 385)
+                .on("click", function() {
+                    if (!p2) {
+                        phaseTwo();
+                }
+            });
+            svg.append("text").text("Next")
+                .style("font-size", 16)
+                .attr("id", "next")
+                .attr("x", 533)
+                .attr("y", 403)
+                .on("click", function () {                                         if (!p2) {
+                        phaseTwo();
+                }
+            });
+        }
+
+        // phase two: second stick figure
+        function phaseTwo() {
+            // set phase two to activated
+            p2 = true;
+
+            // gray out next button
+            d3.select("#nextbg").attr("fill", "gray").attr("opacity", 0);
+            d3.select("#next").attr("fill", "lightgray").attr("opacity", 0);
+
+            // draw stick figure
+            svg.append("rect")
+                .transition()
+                .attr("fill", "pink")
+                .attr("x", 600)
+                .attr("y", 170)
+                .attr("width", 50)
+                .attr("height", 50);
+
+            // draw speech bubble
+            svg.append("text")
+                .append("tspan").text("Uh, stop trying to make fetch happen")
+                .attr("x", 300)
+                .attr("y", 205);
+        }
+            
+        // activate phase one on start
+        phaseOne();
+
+        body.append("p").text("Rectangles are placeholders for stick figures.");
+    </script>
+</body>
+
+</html>

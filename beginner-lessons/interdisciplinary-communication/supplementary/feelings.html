@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>D3 Feelings</title>
+
+    <!-- load D3 -->
+    <script
+        src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+
+    <!-- global styles -->
+    <style>
+        body {
+            font-family: Helvetica;
+        }
+        svg {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        #buttons {
+            margin-left: 90px;
+        }
+        button {
+            margin: 5px;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        var body = d3.select("body");
+        var svg = body.append("svg")
+            .attr("width", 500)
+            .attr("height", 100);
+        let select;
+
+        // speaker & audience groupings
+        var groups = [
+            ["Expert with Jargon", "Advanced Classroom"],
+            ["Expert with Jargon", "Expert Symposium"],
+            ["Expert with Jargon", "Introductory Classroom"],
+            ["Expert with Jargon", "General Interest Crowd"],
+            ["Expert without Jargon", "Introductory Classroom"],
+            ["Expert without Jargon", "Advanced Classroom"],
+            ["Expert without Jargon", "Expert Symposium"],
+            ["Expert without Jargon", "General Interest Crowd"],
+            ["Novice with Jargon", "Introductory Classroom"],
+            ["Novice with Jargon", "Advanced Classroom"],
+            ["Novice with Jargon", "Expert Symposium"],
+            ["Novice with Jargon", "General Interest Crowd"],
+            ["Novice without Jargon", "Introductory Classroom"],
+            ["Novice without Jargon", "Advanced Classroom"],
+            ["Novice without Jargon", "Expert Symposium"],
+            ["Novice without Jargon", "General Interest Crowd"]
+        ];
+
+        // speaker from random selection
+        var speaker = svg.append("text")
+            .attr("x", 50)
+            .attr("y", 50);
+
+        // audience from random selection
+        var audience = svg.append("text")
+            .attr("x", 300)
+            .attr("y", 50);
+
+        // randomly select speaker-audience combination
+        function draw() {
+            // draw while combinations are still left in array
+            if (groups && groups.length) {
+                select = groups[Math.floor(Math.random() * groups.length)];
+                speaker.text(select[0]).style("opacity", 0)
+                  .transition().style("opacity", "1").duration(300);
+                audience.text(select[1]).style("opacity", 0)
+                  .transition().style("opacity", "1").duration(300);
+
+                // remove selected grouping from array
+                groups = groups.filter(function (item) { return item !== select; });
+            }
+        }
+
+        // check feeling
+        function check(feeling) {
+            var speaker = select[0];
+            var audience = select[1];
+
+            if (speaker === "Expert with Jargon") {
+                if (audience === "Introductory Classroom") {
+                    if (feeling === "Bored" || feeling === "Confused" || feeling == "Frustrated") {
+                        message.style("color", "green").text("Yes, this feeling is likely given the disconnect between speaker and audience.");
+                        draw();
+                    } else {
+                        message.style("color", "red").text("That feeling might not be the most likely given the context.");
+                    }
+                } else if (audience === "Advanced Classroom") {
+                    if (feeling === "Interested") {
+                        message.style("color", "green").text("Yes, this feeling is likely given the similar perspective of speaker and audience.");
+                        draw();
+                    } else {
+                        message.style("color", "red").text("That feeling might not be the most likely given the context.");
+                    }
+                } else if (audience === "Expert Symposium") {
+                    if (feeling === "Interested") {
+                        message.style("color", "green").text("Yes, this feeling is likely given the similar perspective of speaker and audience.");
+                        draw();
+                    } else {
+                        message.style("color", "red").text("That feeling might not be the most likely given the context.");
+                    }
+                } else if (audience === "General Interest Crowd") {
+                    if (feeling === "Bored" || feeling === "Confused" || feeling == "Frustrated") {
+                        message.style("color", "green").text("Yes, this feeling is likely given the disconnect between speaker and audience.");
+                        draw();
+                    } else {
+                        message.style("color", "red").text("That feeling might not be the most likely given the context.");
+                    }
+                }
+            } else if (speaker === "Expert without Jargon") {
+                if (audience === "Introductory Classroom") {
+                    if (feeling === "Interested") {
+                        message.style("color", "green").text("Yes, this feeling is likely given the similar perspective of speaker and audience.");
+                        draw();
+                    } else {
+                        message.style("color", "red").text("That feeling might not be the most likely given the context.");
+                    }
+                } else if (audience === "Advanced Classroom") {
+                    if (feeling === "Bored") {
+                        message.style("color", "green").text("Yes, this feeling is likely given the similar perspective of speaker and audience.");
+                        draw();
+                    } else {
+                        message.style("color", "red").text("That feeling might not be the most likely given the context.");
+                    }
+                } else if (audience === "Expert Symposium") {
+                    if (feeling === "Bored") {
+                        message.style("color", "green").text("Yes, this feeling is likely given the disconnect between speaker and audience.");
+                        draw();
+                    } else {
+                        message.style("color", "red").text("That feeling might not be the most likely given the context.");
+                    }
+                } else if (audience === "General Interest Crowd") {
+                    if (feeling === "Interested") {
+                        message.style("color", "green").text("Yes, this feeling is likely given the similar perspective of speaker and audience.");
+                        draw();
+                    } else {
+                        message.style("color", "red").text("That feeling might not be the most likely given the context.");
+                    }
+                }
+            } else if (speaker === "Novice with Jargon") {
+                if (audience === "Introductory Classroom") {
+                    if (feeling === "Confused" || feeling === "Frustrated") {
+                        message.style("color", "green").text("Yes, this feeling is likely give the disconnect between speaker, audience, and content familiarity.");
+                        draw();
+                    } else {
+                        message.style("color", "red").text("That feeling might be possible, but not the most likely, given the context.");
+                    }
+                } else if (audience === "Advanced Classroom") {
+                    if (feeling === "Confused" || feeling === "Frustrated") {
+                        message.style("color", "green").text("Yes, this feeling is likely give the disconnect between speaker, audience, and content familiarity.");
+                        draw();
+                    } else {
+                        message.style("color", "red").text("That feeling might be possible, but not the most likely, given the context.");
+                    }
+                } else if (audience === "Expert Symposium") {
+                    if (feeling === "Confused" || feeling === "Frustrated") {
+                        message.style("color", "green").text("Yes, this feeling is likely give the disconnect between speaker, audience, and content familiarity.");
+                        draw();
+                    } else {
+                        message.style("color", "red").text("That feeling might be possible, but not the most likely, given the context.");
+                    }
+                } else if (audience === "General Interest Crowd") {
+                    if (feeling === "Confused" || feeling === "Frustrated") {
+                        message.style("color", "green").text("Yes, this feeling is likely give the disconnect between speaker, audience, and content familiarity.");
+                        draw();
+                    } else {
+                        message.style("color", "red").text("That feeling might be possible, but not the most likely, given the context.");
+                    }
+                }
+            } else if (speaker === "Novice without Jargon") {
+                if (audience === "Introductory Classroom") {
+                    if (feeling === "Interested") {
+                        message.style("color", "green").text("Yes, this feeling is likely given the similar perspective of speaker and audience.");
+                        draw();
+                    } else {
+                        message.style("color", "red").text("That feeling might be possible, but not the most likely, given the context.");
+                    }
+                } else if (audience === "Advanced Classroom") {
+                    if (feeling === "Bored" || feeling === "Confused" || feeling == "Frustrated") {
+                        message.style("color", "green").text("Yes, this feeling is likely give the disconnect between speaker, audience, and content familiarity.");
+                        draw();
+                    } else {
+                        message.style("color", "red").text("That feeling might be possible, but not the most likely, given the context.");
+                    }
+                } else if (audience === "Expert Symposium") {
+                    if (feeling === "Bored" || feeling === "Confused" || feeling == "Frustrated") {
+                        message.style("color", "green").text("Yes, this feeling is likely give the disconnect between speaker, audience, and content familiarity.");
+                        draw();
+                    } else {
+                        message.style("color", "red").text("That feeling might be possible, but not the most likely, given the context.");
+                    }
+                } else if (audience === "General Interest Crowd") {
+                    if (feeling === "Interested") {
+                        message.style("color", "green").text("Yes, this feeling is likely given the similar perspective of speaker and audience.");
+                        draw();
+                    } else {
+                        message.style("color", "red").text("That feeling might be possible, but not the most likely, given the context.");
+                    }
+                }
+            }
+        }
+
+        body.append("br");
+
+        // buttons div
+        var buttons = body.append("div").attr("id", "buttons");
+
+        // interactive button for each feeling
+        buttons.append("button")
+            .text("Interested");
+        buttons.append("button")
+            .text("Bored");
+        buttons.append("button")
+                .text("Confused");
+        buttons.append("button")
+            .text("Frustrated");
+
+        var message = body.append("p");
+
+
+        d3.selectAll("button").on("click", function() {
+            var feeling = this.innerHTML;
+
+            // check feeling, draw next if successful
+            check(feeling);
+        });
+
+        // draw first combination
+        draw();
+    </script>
+</body>
+
+</html>

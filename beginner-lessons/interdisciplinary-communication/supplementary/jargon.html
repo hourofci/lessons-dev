@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <title>D3 Word Cloud</title>
+
+    <!-- load D3 -->
+    <script src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+
+    <!-- global styles -->
+    <style>
+      svg  { font-family: Impact;
+             -moz-user-select: none;
+             -webkit-user-select: none;
+             -ms-user-select: none;
+             user-select: none;
+           }
+      p    {
+        font-family: helvetica, sans-serif;
+        padding: 0 2px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <svg width="600" height="300" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(300,200)">
+        <text text-anchor="middle" transform="rotate(-10)" style="font-size: 180px; font-family: Impact; fill: rgb(206, 109, 189);">
+          Jargon
+        </text>
+      </g>
+    </svg>
+
+    <p style="opacity: 0">
+
+      <b>Jargon (noun):</b> language and terminology related to a specialized discipline or a group.
+    </p>
+
+    <script>
+      var body = d3.select("body");
+
+      d3.select("text").on("click", function() {
+        d3.select(this).style("stroke", "red").style("opacity", 0.4);
+
+        d3.select("p").transition().style("opacity", "1").duration(2000);
+      });
+    </script>
+  </body>
+</html>

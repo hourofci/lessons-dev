@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <title>D3 Jargon Comparison</title>
+
+    <!-- load D3 -->
+    <script src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+
+    <!-- global styles -->
+    <style>
+      body { font-family: Helvetica; }
+      svg  { padding-top: 8px;
+             float: left;
+             -moz-user-select: none;
+             -webkit-user-select: none;
+             -ms-user-select: none;
+             user-select: none;
+           }
+      p    {
+             font-family: helvetica, sans-serif;
+             font-size: 12.5px;
+           }
+      div  {
+             padding-top: 3px;
+             width: 950px;
+           }
+      button {
+        padding: 8px;
+        margin-left: 40px;
+      }
+      #message {
+        padding-left: 20px;
+        font-size: 14px;
+        color: green;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script>
+      var body = d3.select("body");
+      var svg = body.append("svg")
+        .attr("width", 170)
+        .attr("height", 230);
+
+      // previous y-value for object swapping
+      var yPrev = 0;
+
+      // check if dragged object's y-value (yPrev) is stored
+      var yStored = false;
+
+      // presentation text type array (for random slot assignment)
+      var descriptors = ["https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/interdisciplinary-communication/supplementary/j1-rich-precise.png",
+                         "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/interdisciplinary-communication/supplementary/j2-rich-detailed.png",
+                         "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/interdisciplinary-communication/supplementary/j3-light-long.png",
+                         "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/interdisciplinary-communication/supplementary/j4-none-direct.png"];
+
+      // append sliding cards
+      svg.append("image")
+        .attr("xlink:href", rand())
+        .attr("width", 150)
+        .attr("height", 50)
+        .attr("y", 0);
+      svg.append("image")
+        .attr("xlink:href", rand())
+        .attr("width", 150)
+        .attr("height", 50)
+        .attr("y", 60);
+      svg.append("image")
+        .attr("xlink:href", rand())
+        .attr("width", 150)
+        .attr("height", 50)
+        .attr("y", 120);
+      svg.append("image")
+        .attr("xlink:href", rand())
+        .attr("width", 150)
+        .attr("height", 50)
+        .attr("y", 180);
+
+      var drag = d3.drag()
+        .on("start", function () {
+          var cur = d3.select(this);
+
+          // bring active element to top
+          this.parentNode.appendChild(this);
+
+          dy = cur.attr("y") - d3.event.y;
+        })
+        .on("drag", function() {
+          // if y-val not stored yet, store it
+          if (!yStored) {
+            yPrev = d3.select(this).attr("y");
+            yStored = true;
+          }
+
+          d3.select(this)
+            .attr("y", d3.event.y + dy);
+        })
+        .on("end", function() {
+          // reset y-value storage bool
+          yStored = false;
+          d3.select(this)
+            .attr("y", snap(d3.event.y));
+        });
+
+      drag(d3.selectAll("image"));
+
+      // snap dragged position
+      function snap(y) {
+        // above top slot
+        if (y < 0) { y = 0; }
+        // top slot
+        else if (y > 0 && y < 50) { y = 0; }
+        // second slot
+        else if (y > 50 && y < 130) { y = 60; }
+        // third slot
+        else if (y > 130 && y < 190) { y = 120; }
+        // below bottom slot
+        else if (y > 180) { y = 180; }
+
+        // check if shape already in position, swap if so
+        var swap = d3.selectAll("image").filter(function() {
+          return d3.select(this).attr("y") >= y-10
+              && d3.select(this).attr("y") <= y+10;
+        }).attr("y", yPrev);
+
+        return y;
+      }
+
+      // select random image for jargon descriptor cards
+      function rand() {
+        // select random element
+        var r = descriptors[Math.floor(Math.random() * descriptors.length)];
+
+        // remove selected element from array
+        descriptors = descriptors.filter(function(item) { return item !== r; });
+        return r;
+      }
+
+      d3.select("button").on("click", function() {
+        console.log("test");
+      });
+    </script>
+    <div>
+      <p style="padding-top: 0;">
+        Geographic information science (GIS) is the scientific discipline that studies data structures and computational techniques to capture, represent, process, and analyze geographic information.
+      </p>
+      <p style="padding-top: 13px;">
+        Geographic information science (GIS) intersects with computer science, analytical cartography, remote sensing, and imagery science. Some of the most important work is in developing and documenting useful datasets for science, and interoperating between these datasets and various approaches. Paramount here are effective and open analysis, modeling, and replicability and reproducibility of approaches.
+      </p>
+      <p style="padding-top: 10px;">
+        Geographic information science (GIS) consists of many different forms of knowledge and understanding. It considers fundamental questions raised by the use of systems and technologies, and is the science needed to keep technology progressing.
+      </p>
+      <p style="padding-top: 26px;">
+        Geographic information science includes many fields of knowledge that help to understand spatial information.
+      </p>
+    </div>
+    <script>
+      body.append("br");
+      body.append("br");
+      
+      // display message only once
+      body.append("button").text("Submit").on("click", function() {
+        if (!document.getElementById("message")) {
+          body.append("p").attr("id", "message").text("Submitted!").style("display", "inline");
+        }
+      });
+    </script>
+  </body>
+</html>
