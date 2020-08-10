@@ -665,13 +665,20 @@ div.run_this_cell {
 
 div.hciheader {
   /* background-image: url(https://github.com/hourofci/lessons-dev/raw/master/template/supplementary/hippo-logo.png); */
-  background-image: url(supplementary/hippo-hci-tiny.png);
+  /* background-image: url(supplementary/hippo-hci-tiny.png); */
+  background-image: url(https://raw.githubusercontent.com/hourofci/lessons-dev/master/template-lesson/template/supplementary/hippo-hci-tiny.png);
   background-position: right top;
   background-repeat: no-repeat;
   background-origin: padding-box;
+  background-color: #fff;
   margin: 20px 20px 20px 20px;
   height: 100px;
 
+  /* Override transition so that the logo always displays */
+  transition-property: none !important;
+  transition-duration: 0s !import;   
+  z-index: 99 !important;
+  opacity: 1;
 }
 
 div.hcifooter {

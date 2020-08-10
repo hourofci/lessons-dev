@@ -1,5 +1,5 @@
 requirejs.config({
-    "baseUrl": "../supplementary/js",
+    "baseUrl": "../../supplementary/js",
     "shim": {
         "jquery.md5": ["jquery"]
     }
