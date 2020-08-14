@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <title>D3 Spatial Grid</title>
+
+    <!-- load D3 -->
+    <script src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+
+    <!-- global styles -->
+    <style>
+      body   { font-family: helvetica, sans-serif;
+               -moz-user-select: none;
+               -webkit-user-select: none;
+               -ms-user-select: none;
+               user-select: none; }
+      .main  { border: 2px solid gray; }
+      button { padding: 5px; }
+      text   { pointer-events: none; }
+    </style>
+  </head>
+
+  <body>
+    <script>
+      var grid_dim = 420;
+      var shape_dim = 40;
+      var body = d3.select("body");
+      var svg = body.append("svg")
+        .attr("width", grid_dim+170)
+        .attr("height", grid_dim)
+        .classed("main", true);
+      var table = body.append("img").attr("src", "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/geospatial-data/supplementary/table-1.png")
+        .attr("width", 330)
+        .attr("height", 350)
+        .style("border", "2.5px solid gray")
+        .style("margin", "0 0 35px 6px");
+      // number of correct shapes
+      correct = 0;
+
+      // draw spatial grid
+      svg.append("image").attr("xlink:href", "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/geospatial-data/supplementary/grid-1.svg")
+        .attr("width", grid_dim)
+        .attr("height", grid_dim);
+
+      // draw shapes
+      svg.append("image").attr("xlink:href", "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/geospatial-data/supplementary/1-circle.svg")
+        .classed("shape", true)
+        .attr("id", "circle")
+        .attr("x", 435)
+        .attr("y", 0)
+        .attr("width", shape_dim)
+        .attr("height", shape_dim);
+      svg.append("image").attr("xlink:href", "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/geospatial-data/supplementary/2-star.svg")
+        .classed("shape", true)
+        .attr("id", "star")
+        .attr("x", 485)
+        .attr("y", 0)
+        .attr("width", shape_dim)
+        .attr("height", shape_dim);
+      svg.append("image").attr("xlink:href", "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/geospatial-data/supplementary/3-square.svg")
+        .classed("shape", true)
+        .attr("id", "square")
+        .attr("x", 535)
+        .attr("y", 0)
+        .attr("width", shape_dim)
+        .attr("height", shape_dim);
+      svg.append("image").attr("xlink:href", "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/geospatial-data/supplementary/4-hexagon.svg")
+        .classed("shape", true)
+        .attr("id", "hexagon")
+        .attr("x", 435)
+        .attr("y", 50)
+        .attr("width", shape_dim)
+        .attr("height", shape_dim);
+      svg.append("image").attr("xlink:href", "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/geospatial-data/supplementary/5-diamond.svg")
+        .classed("shape", true)
+        .attr("id", "diamond")
+        .attr("x", 485)
+        .attr("y", 50)
+        .attr("width", shape_dim)
+        .attr("height", shape_dim);
+      svg.append("image").attr("xlink:href", "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/geospatial-data/supplementary/6-ellipse.svg")
+        .classed("shape", true)
+        .attr("id", "ellipse")
+        .attr("x", 535)
+        .attr("y", 50)
+        .attr("width", shape_dim)
+        .attr("height", shape_dim);
+      svg.append("image").attr("xlink:href", "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/geospatial-data/supplementary/7-triangle.svg")
+        .classed("shape", true)
+        .attr("id", "triangle")
+        .attr("x", 435)
+        .attr("y", 100)
+        .attr("width", shape_dim)
+        .attr("height", shape_dim);
+      svg.append("image").attr("xlink:href", "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/geospatial-data/supplementary/8-pentagon.svg")
+        .classed("shape", true)
+        .attr("id", "pentagon")
+        .attr("x", 485)
+        .attr("y", 100)
+        .attr("width", shape_dim)
+        .attr("height", shape_dim);
+      svg.append("image").attr("xlink:href", "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/geospatial-data/supplementary/9-decagon.svg")
+        .classed("shape", true)
+        .attr("id", "decagon")
+        .attr("x", 535)
+        .attr("y", 100)
+        .attr("width", shape_dim)
+        .attr("height", shape_dim);
+
+      // shape drag functionality
+      var drag = d3.drag()
+        .on("start", function () {
+          var cur = d3.select(this);
+          dx = cur.attr("x") - d3.event.x;
+          dy = cur.attr("y") - d3.event.y;
+        })
+        .on("drag", function() {
+          d3.select(this)
+            .attr("x", d3.event.x + dx)
+            .attr("y", d3.event.y + dy);
+        }).on("end", function() {
+          var cur = d3.select(this);
+
+          // prevent out of bounds
+          if (d3.event.x < 0) {
+            d3.select(this).attr("x", 0);
+          }
+          if (d3.event.x > 590) {
+            d3.select(this).attr("x", 550);
+          }
+          if (d3.event.y < 0) {
+            d3.select(this).attr("y", 0);
+          }
+          if (d3.event.y > 420) {
+            d3.select(this).attr("y", 380);
+          }
+
+          // check shape position
+          check(cur);
+        });
+      drag(d3.selectAll(".shape"));
+
+      // check if shape is within winning bounds
+      function check(shape) {
+        var type = shape.attr("id");
+        var x = shape.attr("x");
+        var y = shape.attr("y");
+
+        // bound checking
+        switch(type) {
+          case "square":
+            // top left cell
+            if (x > 0 && x < 140 && y > 0 && y < 140) {
+              // prevent dragging
+              d3.select("#square").on(".drag", null);
+              // initiate success animation
+              success(x, y);
+            } else {
+              // initiate retry animation
+              retry(x, y);
+            }
+            break;
+          case "hexagon":
+            // top middle cell
+            if (x > 140 && x < 280 && y > 0 && y < 140) {
+              // prevent dragging
+              d3.select("#hexagon").on(".drag", null);
+              // initiate success animation
+              success(x, y);
+            } else {
+              // initiate retry animation
+              retry(x, y);
+            }
+            break;
+          case "decagon":
+            // top right cell
+            if (x > 280 && x < 420 && y > 0 && y < 140) {
+              // prevent dragging
+              d3.select("#decagon").on(".drag", null);
+              // initiate success animation
+              success(x, y);
+            } else {
+              // initiate retry animation
+              retry(x, y);
+            }
+            break;
+          case "pentagon":
+            // middle left cell
+            if (x > 0 && x < 140 && y > 140 && y < 280) {
+              // prevent dragging
+              d3.select("#pentagon").on(".drag", null);
+              // initiate success animation
+              success(x, y);
+            } else {
+              // initiate retry animation
+              retry(x, y);
+            }
+            break;
+          case "circle":
+            // middle middle cell
+            if (x > 140 && x < 280 && y > 140 && y < 280) {
+              // prevent dragging
+              d3.select("#circle").on(".drag", null);
+              // initiate success animation
+              success(x, y);
+            } else {
+              // initiate retry animation
+              retry(x, y);
+            }
+            break;
+          case "star":
+            // middle right cell
+            if (x > 280 && x < 420 && y > 140 && y < 280) {
+              // prevent dragging
+              d3.select("#star").on(".drag", null);
+              // initiate success animation
+              success(x, y);
+            } else {
+              // initiate retry animation
+              retry(x, y);
+            }
+            break;
+          case "ellipse":
+            // bottom left cell
+            if (x > 0 && x < 140 && y > 280 && y < 420) {
+              // prevent dragging
+              d3.select("#ellipse").on(".drag", null);
+              // initiate success animation
+              success(x, y);
+            } else {
+              // initiate retry animation
+              retry(x, y);
+            }
+            break;
+          case "diamond":
+            // bottom middle cell
+            if (x > 140 && x < 280 && y > 280 && y < 420) {
+              // prevent dragging
+              d3.select("#diamond").on(".drag", null);
+              // initiate success animation
+              success(x, y);
+            } else {
+              // initiate retry animation
+              retry(x, y);
+            }
+            break;
+          case "triangle":
+            // bottom right cell
+            if (x > 280 && x < 420 && y > 280 && y < 420) {
+              // prevent dragging
+              d3.select("#triangle").on(".drag", null);
+              // initiate success animation
+              success(x, y);
+            } else {
+              // initiate retry animation
+              retry(x, y);
+            }
+            break;
+          default:
+            break;
+        }
+      }
+
+      // success animation
+      function success(x, y) {
+        // check if all shapes are correct
+        if (correct >= 8) {
+          finish.append("text").text("Congrats! You intuitively used each symbol's")
+            .classed("complete", true)
+            .attr("x", 10)
+            .attr("y", 30)
+            .attr("fill", "lime")
+            .attr("font-size", 20)
+            .transition().duration(800)
+              .attr("fill-opacity", 1);
+          finish.append("text").text("coordinates")
+            .classed("complete", true)
+            .attr("x", 410)
+            .attr("y", 30)
+            .attr("fill", "lime")
+            .attr("font-size", 20)
+            .attr("font-weight", "bold")
+            .transition().duration(800)
+              .attr("fill-opacity", 1);
+          finish.append("text").text("to drop them in the right location.")
+            .classed("complete", true)
+            .attr("x", 530)
+            .attr("y", 30)
+            .attr("fill", "lime")
+            .attr("font-size", 20)
+            .transition().duration(800)
+              .attr("fill-opacity", 1);
+        }
+
+        svg.append("text").text("Nice!")
+          .classed("success", true)
+          .attr("x", x-10)
+          .attr("y", y-10)
+          .attr("fill", "lime")
+          .attr("fill-opacity", 0)
+          .attr("stroke", "none")
+          .attr("font-size", 30)
+          .transition().duration(800)
+            .attr("fill-opacity", 1)
+          .transition().duration(1500)
+            .attr("fill-opacity", 0);
+
+        correct++;
+      }
+
+      // retry animation
+      function retry(x, y) {
+        svg.append("text").text("Try again")
+          .classed("failure", true)
+          .attr("x", x-42)
+          .attr("y", y-10)
+          .attr("fill", "tomato")
+          .attr("fill-opacity", 0)
+          .attr("stroke", "none")
+          .attr("font-size", 30)
+          .transition().duration(800)
+            .attr("fill-opacity", 1)
+          .transition().duration(1500)
+            .attr("fill-opacity", 0);
+      }
+
+      // reset activity
+      function reset() {
+        // reset shape positions
+        d3.select("#circle")
+          .attr("x", 435)
+          .attr("y", 0);
+        d3.select("#star")
+          .attr("x", 485)
+          .attr("y", 0);
+        d3.select("#square")
+          .attr("x", 535)
+          .attr("y", 0);
+        d3.select("#hexagon")
+          .attr("x", 435)
+          .attr("y", 50);
+        d3.select("#diamond")
+          .attr("x", 485)
+          .attr("y", 50);
+        d3.select("#ellipse")
+          .attr("x", 535)
+          .attr("y", 50);
+        d3.select("#triangle")
+          .attr("x", 435)
+          .attr("y", 100);
+        d3.select("#pentagon")
+          .attr("x", 485)
+          .attr("y", 100);
+        d3.select("#decagon")
+          .attr("x", 535)
+          .attr("y", 100);
+
+        // clear success and failure messages
+        d3.selectAll(".success").style("fill-opacity", 0);
+        d3.selectAll(".failure").style("fill-opacity", 0);
+        d3.selectAll(".complete").text("");
+
+        // enable dragging
+        d3.selectAll(".shape").call(drag);
+      }
+
+      // reset button
+      svg.append("rect")
+        .style("fill", "skyblue")
+        .style("stroke", "black")
+        .style("stroke-width", "1.5px")
+        .attr("rx", 8)
+        .attr("ry", 8)
+        .attr("width", 60)
+        .attr("height", 25)
+        .attr("x", 520)
+        .attr("y", 385)
+        .on("click", function() { reset(); });
+      svg.append("text").text("Reset")
+        .style("font-size", 16)
+        .attr("x", 529)
+        .attr("y", 403)
+        .on("click", function() { reset(); });
+
+      body.append("br");
+      var finish = body.append("svg")
+        .attr("width", 850)
+        .attr("height", 50);
+    </script>
+  </body>
+</html>

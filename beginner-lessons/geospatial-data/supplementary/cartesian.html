@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <title>D3 Cartesian</title>
+
+    <!-- load D3 -->
+    <script src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+
+    <!-- global styles -->
+    <style>
+      body   { font-family: helvetica, sans-serif;
+               -moz-user-select: none;
+               -webkit-user-select: none;
+               -ms-user-select: none;
+               user-select: none; }
+    </style>
+  </head>
+
+  <body>
+    <script>
+      var body = d3.select("body");
+      var svg = body.append("svg")
+        .attr("width", 530).attr("height", 515);
+      var img = svg.append("image")
+        .attr("href", "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/geospatial-data/supplementary/gd-image-5.png");
+      var point = 0;
+      var p1 = false;
+      var p2 = false;
+      var p3 = false;
+      var success = false;
+
+      svg.on("click", function() {
+        var x = d3.event.x;
+        var y = d3.event.y;
+
+        // point (-4,6)
+        if (x > 139 && x < 159) {
+          if (y > 64 && y < 84) {
+            if (!p1) {
+              p1 = true;
+              svg.append("ellipse")
+              .attr("cx", 142)
+              .attr("cy", 68)
+              .attr("rx", 8)
+              .attr("ry", 8)
+              .attr("fill", "yellow")
+
+              point++;
+              check();
+            }
+          }
+        }
+
+        // point (0,5)
+        if (x > 265 && x < 285) {
+          if (y > 97 && y < 117) {
+            if (!p2) {
+              p2 = true;
+              svg.append("ellipse")
+              .attr("cx", 268)
+              .attr("cy", 99)
+              .attr("rx", 8)
+              .attr("ry", 8)
+              .attr("fill", "yellow")
+
+              point++;
+              check();
+            }
+          }
+        }
+
+        // point (3,-2)
+        if (x > 360 && x < 380) {
+          if (y > 315 && y < 335) {
+            if (!p3) {
+              p3 = true;
+              svg.append("ellipse")
+              .attr("cx", 363)
+              .attr("cy", 319)
+              .attr("rx", 8)
+              .attr("ry", 8)
+              .attr("fill", "yellow")
+
+              point++;
+              check();
+            }
+          }
+        }
+      });
+
+      function check() {
+        if (point >= 3) {
+          // draw line segments between points
+          svg.append("line")
+            .attr("x1", 145)
+            .attr("y1", 69)
+            .attr("x2", 270)
+            .attr("y2", 102)
+            .attr("stroke", "yellow")
+            .attr("stroke-width", 4);
+          svg.append("line")
+            .attr("x1", 270)
+            .attr("y1", 102)
+            .attr("x2", 365)
+            .attr("y2", 320)
+            .attr("stroke", "yellow")
+            .attr("stroke-width", 4);
+
+          if (!success) {
+            // display success message once
+            success = true;
+            svg.append("text").text("Congrats! You intuitively used the")
+            .attr("x", 85)
+            .attr("y", 435)
+            .attr("fill", "yellow")
+            .attr("font-size", 24)
+            .transition().duration(600)
+            .attr("stroke-opacity", 1)
+            .attr("fill-opacity", 1);
+            svg.append("text").text("Cartesian coordinate system")
+            .attr("x", 15)
+            .attr("y", 465)
+            .attr("fill", "yellow")
+            .attr("font-size", 24)
+            .attr("font-weight", "bold")
+            .transition().duration(600)
+            .attr("stroke-opacity", 1)
+            .attr("fill-opacity", 1);
+            svg.append("text").text("to draw this line.")
+            .attr("x", 350)
+            .attr("y", 465)
+            .attr("fill", "yellow")
+            .attr("font-size", 24)
+            .transition().duration(600)
+            .attr("stroke-opacity", 1)
+            .attr("fill-opacity", 1);
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
