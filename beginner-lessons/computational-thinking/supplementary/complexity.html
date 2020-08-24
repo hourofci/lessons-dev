@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="main.css"/>
+    <link rel="stylesheet" type="text/css" href="complexity.css"/>
+    <script src="complexity.js"></script>
+    <script src="main.js"></script>
+  </head>
+  <body>
+    <div id="overlay">
+      <div id="overlay-text">
+        Congratulations!<br/>
+        You just created an algorithm with more
+        <div id="overlay-big-text">COMPLEXITY</div>
+      </div>
+    </div>
+    <div>
+      <div id="look-up" class="block">
+        LOOK UP<img id="hand" src="hand.png"/>
+      </div>
+      <div id="look-down" class="block">LOOK DOWN</div>
+      <div id="look-left" class="block">LOOK LEFT</div>
+      <div id="look-right" class="block">LOOK RIGHT</div>
+      <div id="if-healthy" class="block">
+        IF <img src="healthy.png" width="18"/>
+      </div>
+      <div id="if-burning" class="block">
+        IF <img src="burning.png" width="18"/>
+      </div>
+      <div id="if-burnt" class="block">
+        IF <img src="burnt.png" width="18"/>
+      </div>
+      <div id="and" class="block">AND</div>
+      <div id="then-healthy" class="block">
+        THEN <img src="healthy.png" width="18"/>
+      </div>
+      <div id="then-burning" class="block">
+        THEN <img src="burning.png" width="18"/>
+      </div>
+      <div id="then-burnt" class="block">
+        THEN <img src="burnt.png" width="18"/>
+      </div>
+      <div id="if-dice1" class="block">
+        IF <img src="dice1.png" width="18"/>
+      </div>
+      <div id="if-dice2" class="block">
+        IF <img src="dice2.png" width="18"/>
+      </div>
+      <div id="if-dice3" class="block">
+        IF <img src="dice3.png" width="18"/>
+      </div>
+      <div id="if-dice4" class="block">
+        IF <img src="dice4.png" width="18"/>
+      </div>
+      <div id="if-dice5" class="block">
+        IF <img src="dice5.png" width="18"/>
+      </div>
+      <div id="if-dice6" class="block">
+        IF <img src="dice6.png" width="18"/>
+      </div>
+    </div>
+    <div id="tree-area" class="bottom-row">
+      <div>
+        <div id="tl-tree" class="healthy tree"></div>
+        <div id="tm-tree" class="burning tree"></div>
+        <div id="tr-tree" class="healthy tree"></div>
+      </div>
+      <div>
+        <div id="ml-tree" class="healthy tree"></div>
+        <div id="highlighted-tree" class="healthy tree"></div>
+        <div id="mr-tree" class="burning tree"></div>
+      </div>
+      <div>
+        <div id="bl-tree" class="healthy tree"></div>
+        <div id="bm-tree" class="healthy tree"></div>
+        <div id="br-tree" class="healthy tree"></div>
+      </div>
+    </div>
+    <div id="algorithm-area" class="bottom-row">
+      <div id="algo-steps">
+        <div id="algo-step-1">1.</div>
+      </div>
+    </div>
+    <div id="go-button" class="bottom-row" onclick="doAlgoStep1();">
+      GO
+    </div>
+    <div id="dice-result">
+    </div>
+  </body>
+</html>

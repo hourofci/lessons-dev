@@ -1,0 +1,15 @@
+body, #overlay {
+  height: 580px;
+}
+#algorithm-area {
+  font-size: 25px;
+}
+#algorithm-area .block {
+  font-size: 15px;
+  margin: 0;
+  padding: 5px;
+}
+#algorithm-area .block img {
+  width: 14px;
+  height: 14px;
+}

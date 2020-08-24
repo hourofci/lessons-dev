@@ -1,0 +1,268 @@
+/* Make nothing highlightable */
+* {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome and Opera */
+}
+
+/*************
+ * ANIMATION *
+ *************/
+#hand {
+          animation: hand 1.5s infinite;
+  -webkit-animation: hand 1.5s infinite;
+}
+
+/********************
+ * BACKGROUND-COLOR
+ *
+ *  Conservative 7-color palette adapted for color blindness from:
+ *  http://mkweb.bcgsc.ca/colorblind/img/colorblindness.palettes.trivial.png
+ *********************/
+         #algorithm-area { background-color: rgba( 86, 180, 233, 1.0); }
+                  .block { background-color: rgba(204, 121, 167, 1.0); }
+#go-button, #save-button { background-color: rgba(  0, 114, 178, 1.0); }
+       #highlighted-tree { background-color: rgba(  0, 255,   0, 0.4); }
+                #overlay { background-color: rgba(  0,   0,   0, 0.7); }
+
+/********************
+ * BACKGROUND-IMAGE *
+ ********************/
+.burning.tree { background-image: url(burning.png); }
+         #die { background-image: url(dice2.png);   }
+.healthy.tree { background-image: url(healthy.png); }
+
+/*********************
+ * BACKGROUND-REPEAT *
+ *********************/
+.tree { background-repeat: no-repeat; }
+
+/**********
+ * BORDER *
+ **********/
+                            body { border: 3px solid  gray;  }
+.block, #go-button, #save-button { border: 1px solid  black; }
+               #highlighted-tree { border: 3px dotted green; }
+                           .tree { border: 3px solid  white; }
+
+/*****************
+ * BORDER-RADIUS *
+ *****************/
+#algorithm-area, body, .block, #go-button, #save-button { border-radius: 15px; }
+                                               #overlay { border-radius: 12px; }
+
+/*********
+ * COLOR
+ *
+ * Conservative 7-color palette adapted for color blindness from:
+ *  http://mkweb.bcgsc.ca/colorblind/img/colorblindness.palettes.trivial.png
+ *********/
+#go-button, #save-button { color: rgb(  0,   0,   0); }
+       #overlay-big-text { color: rgb(230, 159,   0); }
+       #overlay-text     { color: rgb(255, 255, 255); }
+
+/**********
+ * CURSOR *
+ **********/
+.block, #go-button, #save-button { cursor: pointer; }
+
+/***********
+ * DISPLAY *
+ ***********/
+#algorithm-area, .block, .bottom-row, #dice-result,
+       .tree { display: inline-block; }
+#go-button, #overlay,
+#save-button { display: none;         }
+
+/*************
+ * FONT-SIZE *
+ *************/
+#algorithm-area, #go-button,
+#overlay-big-text { font-size: 40px; }
+           .block { font-size: 25px; }
+#overlay-text,
+     #save-button { font-size: 30px; }
+
+/*************
+ * FONT-WEIGHT *
+ *************/
+#overlay { font-weight: bold; }
+
+/**********
+ * HEIGHT *
+ **********/
+body, #overlay { height: 540px; }
+  #dice-result { height: 100px; }
+          #die { height: 100%;  }
+         .tree { height: 100px; }
+
+/*************
+ * KEYFRAMES *
+ *************/
+@keyframes block-highlight {
+  from { background-color: rgb(204, 121, 167); }
+    to { background-color: rgb( 86, 180, 233); }
+}
+@-webkit-keyframes block-highlight {
+  from { background-color: rgb(204, 121, 167); }
+    to { background-color: rgb( 86, 180, 233); }
+}
+@keyframes collapse-function {
+  from {
+    border: 1px solid white;
+    height: 269px;
+    padding: 20px;
+    width: 270px;
+  }
+  to {
+    border: 1px solid black;
+    height: 36px;
+    padding: 10px;
+    width: 255px;
+  }
+}
+@-webkit-keyframes collapse-function {
+  from {
+    border: 1px solid white;
+    height: 269px;
+    padding: 20px;
+    width: 270px;
+  }
+  to {
+    border: 1px solid black;
+    height: 36px;
+    padding: 10px;
+    width: 255px;
+  }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+    to { opacity: 1; }
+}
+@-webkit-keyframes fade-in {
+  from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes fade-out {
+  from { opacity: 1; }
+    to { opacity: 0; }
+}
+@-webkit-keyframes fade-out {
+  from { opacity: 1; }
+    to { opacity: 0; }
+}
+@keyframes hand {
+  from { bottom: -95px; }
+    to { bottom: -75px; }
+}
+@-webkit-keyframes hand {
+  from { background-color: red;    }
+    to { background-color: yellow; }
+}
+@keyframes move-arrow-down {
+  from { opacity: 0; top:    0; }
+    to { opacity: 1; top: 50.0px; }
+}
+@-webkit-keyframes move-arrow-down {
+  from { opacity: 0; top:    0; }
+    to { opacity: 1; top: 50.0px; }
+}
+@keyframes move-arrow-left {
+  from { opacity: 0; left:     0; }
+    to { opacity: 1; left: -50.0px; }
+}
+@-webkit-keyframes move-arrow-left {
+  from { opacity: 0; left:     0; }
+    to { opacity: 1; left: -50.0px; }
+}
+@keyframes move-arrow-right {
+  from { opacity: 0; left:    0; }
+    to { opacity: 1; left: 50.0px; }
+}
+@-webkit-keyframes move-arrow-right {
+  from { opacity: 0; left:    0; }
+    to { opacity: 1; left: 50.0px; }
+}
+@keyframes move-arrow-up {
+  from { opacity: 0; top:   0;   }
+    to { opacity: 1; top: -50px; }
+}
+@-webkit-keyframes move-arrow-up {
+  from { opacity: 0; top:   0;   }
+    to { opacity: 1; top: -50px; }
+}
+
+/**********
+ * MARGIN *
+ **********/
+                   .block { margin: 5px;          }
+              .bottom-row { margin: 20px;         }
+             #dice-result { margin-left:  55.0px; }
+   #arrow-down, #arrow-up { margin-left: -37.5px; }
+#arrow-left, #arrow-right { margin-top:  -37.5px; }
+             #dice-result { margin-top:  110.0px; }
+        #overlay-big-text { margin-top:   10.0px; }
+               #go-button { margin-top:  100.0px; }
+            #overlay-text { margin-top:  200.0px; }
+
+/***********
+ * PADDING *
+ ***********/
+                 #algorithm-area { padding: 20px; }
+.block, #go-button, #save-button { padding: 10px; }
+
+/******************
+ * POINTER-EVENTS *
+ ******************/
+.block img, #hand { pointer-events: none; }
+
+/************
+ * POSITION *
+ ************/
+#algorithm-area, body, .block, #dice-result, #go-button,
+                 .tree { position: relative; }
+.arrow, #die-check, #die-x, #hand, #overlay, #save-button,
+  #tree-check, #tree-x { position: absolute; }
+#arrow-left, #arrow-right { bottom:  12.5px; }
+                    #hand { bottom: -95.0px; }
+             #save-button { bottom:  15.0px; }
+     #tree-check, #tree-x { bottom:     0;   }
+                   .arrow {   left:  50.0px; }
+              #arrow-left {   left: -50.0px; }
+       #die-check, #die-x {   left: -40.0px; }
+                    #hand {   left:     0;   }
+             #save-button {  right:  15.0px; }
+     #tree-check, #tree-x {  right: -15.0px; }
+              #arrow-down {    top:  50.0px; }
+                #arrow-up {    top: -50.0px; }
+       #die-check, #die-x {    top: -20.0px; }
+
+/******************
+ * TEXT-ALIGN *
+ ******************/
+#overlay { text-align: center; }
+
+/******************
+ * VERTICAL-ALIGN *
+ ******************/
+.bottom-row { vertical-align: top; }
+
+/*********
+ * WIDTH *
+ *********/
+#algorithm-area { width: 200px; }
+ body, #overlay { width: 880px; }
+   #dice-result { width: 100px; }
+           #die { width: 100%;  }
+          .tree { width: 100px; }
+
+/***********
+ * Z-INDEX *
+ ***********/
+.arrow, #tree-check, #tree-x { z-index: 1; }
+                       #hand { z-index: 2; }
+                    #overlay { z-index: 3; }
