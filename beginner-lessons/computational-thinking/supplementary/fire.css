@@ -1,0 +1,25 @@
+.button {
+  background-color: rgba(204, 121, 167, 1.0);
+  border: 1px solid black;
+  border-radius: 15px;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 25px;
+  margin: 5px;
+  padding: 10px;
+}
+
+.tree {
+  background-size: 20px 20px;
+  cursor: pointer;
+  height: 20px;
+  position: absolute;
+  text-align: center;
+  width: 20px;
+}
+
+#tree-area {
+  height: 320px;
+  position: relative;
+  width: 320px;
+}
