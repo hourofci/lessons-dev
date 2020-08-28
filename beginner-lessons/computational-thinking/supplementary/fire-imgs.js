@@ -92,7 +92,7 @@ function CreateTrees() {
           InitBurnX = +evt.target.getAttribute("data-x");
           InitBurnY = +evt.target.getAttribute("data-y");
           document.getElementById(InitBurnX + "-" +
-            InitBurnY).style.backgroundImage = "url(\"burning.png\")";
+            InitBurnY).style.backgroundImage = "url(\"https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/burning.png\")";
           IsRunning = true;
           IntervalID = setInterval(Step, INTERVAL_MILLIS);
         }
@@ -218,10 +218,10 @@ function SetNextStates() {
       var tree = document.getElementById(x + "-" + y);
 
       // If the tree is currently burning
-      if (tree.style.backgroundImage === "url(\"burning.png\")") {
+      if (tree.style.backgroundImage === "url(\"https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/burning.png\")") {
 
         // Set it to be burnt in the next time step
-        tree.setAttribute("data-nextBackground", "url(\"burnt.png\")");
+        tree.setAttribute("data-nextBackground", "url(\"https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/burnt.png\")");
 
       } // end if
 
@@ -234,7 +234,7 @@ function SetNextStates() {
       } // end else
 
       // If the tree will be non-burning in the next time step
-      if (tree.getAttribute("data-nextBackground") === "url(\"healthy.png\")") {
+      if (tree.getAttribute("data-nextBackground") === "url(\"https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/healthy.png\")") {
 
         // Try to spread the fire to the tree from each of its 4 neighbors
         TrySpread(tree);
@@ -255,7 +255,7 @@ function SetTreeState(tree) {
   if (IsOnBorder(tree)) {
 
     // Set the tree's state to burnt
-    tree.style.backgroundImage = "url(\"burnt.png\")";
+    tree.style.backgroundImage = "url(\"https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/burnt.png\")";
 
   } // end if
 
@@ -263,7 +263,7 @@ function SetTreeState(tree) {
   else {
 
     // Indicate the current tree is non-burning
-    tree.style.backgroundImage = "url(\"healthy.png\")";
+    tree.style.backgroundImage = "url(\"https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/healthy.png\")";
 
   } // end else
 
@@ -341,7 +341,7 @@ function Step() {
 // Define a function that returns whether a given tree is on fire
 function TreeIsOnFire(tree) {
 
-  return tree.style.backgroundImage === "url(\"burning.png\")";
+  return tree.style.backgroundImage === "url(\"https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/burning.png\")";
 
 } // end function TreeIsOnFire(tree)
 
@@ -357,7 +357,7 @@ function TrySpread(tree) {
       SpreadFromBottom(tree)) {
 
     // Light the tree on fire in the next time step
-    tree.setAttribute("data-nextBackground", "url(\"burning.png\")");
+    tree.setAttribute("data-nextBackground", "url(\"https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/burning.png\")");
 
   } // end if
 

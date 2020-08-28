@@ -70,7 +70,7 @@ function setUpAlgorithm() {
 function showHand() {
   var hand = document.createElement("img");
   hand.id = "hand";
-  hand.src = "hand.png";
+  hand.src = "https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/hand.png";
   hand.style.display = "block";
   document.getElementById("try-burn").appendChild(hand);
 }
@@ -85,7 +85,7 @@ function doAlgoStep1a() {
   var arrow = document.createElement("img");
   arrow.id = "arrow-up";
   arrow.className = "arrow";
-  arrow.src = "arrow-up.png";
+  arrow.src = "https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/arrow-up.png";
   document.getElementById("highlighted-tree").appendChild(arrow);
   animate("move-arrow-up 2s", arrow, doAlgoStep1b);
 }
@@ -93,7 +93,7 @@ function doAlgoStep1a() {
 function doAlgoStep1b() {
   var treeCheck = document.createElement("img");
   treeCheck.id = "tree-check";
-  treeCheck.src = "check.png";
+  treeCheck.src = "https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/check.png";
   document.getElementById("tm-tree").appendChild(treeCheck);
   fadeIn(treeCheck, doAlgoStep1c);
 }
@@ -113,7 +113,7 @@ function doAlgoStep2a() {
   var arrow = document.createElement("img");
   arrow.id = "arrow-down";
   arrow.className = "arrow";
-  arrow.src = "arrow-down.png";
+  arrow.src = "https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/arrow-down.png";
   document.getElementById("highlighted-tree").appendChild(arrow);
   animate("move-arrow-down 2s", arrow, doAlgoStep2b);
 }
@@ -121,7 +121,7 @@ function doAlgoStep2a() {
 function doAlgoStep2b() {
   var treeX = document.createElement("img");
   treeX.id = "tree-x";
-  treeX.src = "x.png";
+  treeX.src = "https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/x.png";
   document.getElementById("bm-tree").appendChild(treeX);
   fadeIn(treeX, doAlgoStep3a);
 }
@@ -137,7 +137,7 @@ function doAlgoStep3a2() {
   var arrow = document.createElement("img");
   arrow.id = "arrow-left";
   arrow.className = "arrow";
-  arrow.src = "arrow-left.png";
+  arrow.src = "https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/arrow-left.png";
   document.getElementById("highlighted-tree").appendChild(arrow);
   animate("move-arrow-left 2s", arrow, doAlgoStep3b);
 }
@@ -145,7 +145,7 @@ function doAlgoStep3a2() {
 function doAlgoStep3b() {
   var treeX = document.createElement("img");
   treeX.id = "tree-x";
-  treeX.src = "x.png";
+  treeX.src = "https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/x.png";
   document.getElementById("ml-tree").appendChild(treeX);
   fadeIn(treeX, doAlgoStep4a);
 }
@@ -159,7 +159,7 @@ function doAlgoStep4a() {
   var arrow = document.createElement("img");
   arrow.id = "arrow-right";
   arrow.className = "arrow";
-  arrow.src = "arrow-right.png";
+  arrow.src = "https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/arrow-right.png";
   document.getElementById("highlighted-tree").appendChild(arrow);
   animate("move-arrow-right 2s", arrow, doAlgoStep4b);
 }
@@ -167,7 +167,7 @@ function doAlgoStep4a() {
 function doAlgoStep4b() {
   var treeCheck = document.createElement("img");
   treeCheck.id = "tree-check";
-  treeCheck.src = "check.png";
+  treeCheck.src = "https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/check.png";
   document.getElementById("mr-tree").appendChild(treeCheck);
   fadeIn(treeCheck, doAlgoStep4c);
 }

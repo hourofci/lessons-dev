@@ -9,14 +9,14 @@ function advanceDie(current, result, isSuccessful, callback) {
     if (isSuccessful) {
       check = document.createElement("img");
       check.id = "die-check";
-      check.src = "check.png";
+      check.src = "https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/check.png";
       dieObj.appendChild(check);
       fadeIn(check, callback);
     }
     else {
       x = document.createElement("img");
       x.id = "die-x";
-      x.src = "x.png";
+      x.src = "https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/x.png";
       dieObj.appendChild(x);
       fadeIn(x, callback);
     }
