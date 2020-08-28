@@ -9,14 +9,14 @@ function advanceDie(current, result, isSuccessful, callback) {
     if (isSuccessful) {
       check = document.createElement("img");
       check.id = "die-check";
-      check.src = "https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/check.png";
+      check.src = "https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/computational-thinking/supplementary/check.png";
       dieObj.appendChild(check);
       fadeIn(check, callback);
     }
     else {
       x = document.createElement("img");
       x.id = "die-x";
-      x.src = "https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/x.png";
+      x.src = "https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/computational-thinking/supplementary/x.png";
       dieObj.appendChild(x);
       fadeIn(x, callback);
     }
@@ -36,7 +36,7 @@ function advanceDie(current, result, isSuccessful, callback) {
     }
     setTimeout(function () {
       document.getElementById("die").style.backgroundImage =
-        "url(https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/dice" + next + ".png)";
+        "url(https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/computational-thinking/supplementary/dice" + next + ".png)";
       advanceDie(next, result, isSuccessful, callback);
     }, 250);
   }
