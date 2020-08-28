@@ -36,7 +36,7 @@ function advanceDie(current, result, isSuccessful, callback) {
     }
     setTimeout(function () {
       document.getElementById("die").style.backgroundImage =
-        "url(https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/dicee" + next + ".png)";
+        "url(https://rawcdn.githack.com/hourofci/lessons-dev/6986173831298ce51a5056be4702e4a34a2bae73/beginner-lessons/computational-thinking/supplementary/dice" + next + ".png)";
       advanceDie(next, result, isSuccessful, callback);
     }, 250);
   }
