@@ -13,7 +13,7 @@ function doAlgoStep1() {
   var arrow = document.createElement("img");
   arrow.id = "arrow-up";
   arrow.className = "arrow";
-  arrow.src = "arrow-up.png";
+  arrow.src = "https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/computational-thinking/supplementary/arrow-up.png";
   document.getElementById("highlighted-tree").appendChild(arrow);
   animate("move-arrow-up 2s", arrow, doAlgoStep2);
 }
@@ -23,7 +23,7 @@ function doAlgoStep2() {
 
   var check = document.createElement("img");
   check.id = "tree-check";
-  check.src = "check.png";
+  check.src = "https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/computational-thinking/supplementary/check.png";
   document.getElementById("tm-tree").appendChild(check);
   fadeIn(check, doAlgoStep3);
 }

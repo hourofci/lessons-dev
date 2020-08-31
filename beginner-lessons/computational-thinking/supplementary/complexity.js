@@ -14,7 +14,7 @@ function doAlgoStep1() {
   var arrow = document.createElement("img");
   arrow.id = "arrow-up";
   arrow.className = "arrow";
-  arrow.src = "arrow-up.png";
+  arrow.src = "https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/computational-thinking/supplementary/arrow-up.png";
   document.getElementById("highlighted-tree").appendChild(arrow);
   animate("move-arrow-up 2s", arrow, doAlgoStep2);
 }
@@ -24,7 +24,7 @@ function doAlgoStep2() {
 
   var treeCheck = document.createElement("img");
   treeCheck.id = "tree-check";
-  treeCheck.src = "check.png";
+  treeCheck.src = "https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/computational-thinking/supplementary/check.png";
   document.getElementById("tm-tree").appendChild(treeCheck);
   fadeIn(treeCheck, doAlgoStep3);
 }
@@ -49,7 +49,7 @@ function doAlgoStep6() {
   var arrow = document.createElement("img");
   arrow.id = "arrow-right";
   arrow.className = "arrow";
-  arrow.src = "arrow-right.png";
+  arrow.src = "https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/computational-thinking/supplementary/arrow-right.png";
   document.getElementById("highlighted-tree").appendChild(arrow);
   animate("move-arrow-right 2s", arrow, doAlgoStep7);
 }
@@ -59,7 +59,7 @@ function doAlgoStep7() {
 
   var treeCheck = document.createElement("img");
   treeCheck.id = "tree-check";
-  treeCheck.src = "check.png";
+  treeCheck.src = "https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/computational-thinking/supplementary/check.png";
   document.getElementById("mr-tree").appendChild(treeCheck);
   fadeIn(treeCheck, doAlgoStep8);
 }

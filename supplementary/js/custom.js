@@ -9,10 +9,19 @@ requirejs(['jquery','jquery.md5'],
 function ($) {
 //     alert("hello");
     
-    // assign the user agent string to a Python variable; it will be passed to the hourofci submit button
+    // retrieve info variables
+    var username = location.href.split('/')[4];
+    var username_hash = $.md5(username);
+    var user_agent_hash = $.md5(navigator.userAgent);
+    var lesson = location.href.split('/')[8]; // "template"; 
+    var lesson_level = location.href.split('/')[7].split('-')[0]; // "beginner";
+    var url_pre = "https://check.hourofci.org:4000/"+username_hash+"/"+user_agent_hash+"/"+lesson+"/"+lesson_level+"/"
+    
+    // assign the user agent string, lesson and lesson level to Python variables; they will be passed to the hourofci submit button
     Jupyter.notebook.kernel.execute("user_agent = " + "'" + navigator.userAgent + "'");
-    
-    
+    Jupyter.notebook.kernel.execute("lesson = " + "'" + lesson + "'");
+    Jupyter.notebook.kernel.execute("lesson_level = " + "'" + lesson_level + "'");
+      
     function findCellByTag(tagName) {
         return (Jupyter.notebook.get_cells()
             .filter(
@@ -47,13 +56,6 @@ function ($) {
     $(".output_prompt").css("opacity", 0);
     
     // logging
-    // retrieve info variables
-    var username = location.href.split('/')[4];
-    var username_hash = $.md5(username);
-    var user_agent_hash = $.md5(navigator.userAgent);
-    var lesson = "template"; // TO-DO: retrieve from the path of the lesson
-    var lesson_level = "beginner";
-    var url_pre = "https://check.hourofci.org:4000/"+username_hash+"/"+user_agent_hash+"/"+lesson+"/"+lesson_level+"/"
 
     // customize the click function of the play button
     var run_this_cell = $('.run_this_cell');
