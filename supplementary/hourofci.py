@@ -84,9 +84,9 @@ def SubmitBtn(user_agent, lesson, lesson_level, question,widget,out_func=out,tex
             if type(widget) != str:
                 # print("Your answer is: " + str(answer))
                 pass 
-                
-            if r.status_code == requests.codes.ok:
-                print("Submit Successfully!\n")
+            
+            # if r.status_code == requests.codes.ok:
+            #     print("Submit Successfully!\n")
             out_func()
     
     button.on_click(submit)
