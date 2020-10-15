@@ -72,8 +72,10 @@ function ($) {
     
         // hit the API url if it is a question
         var tags = cell.metadata.tags;
-        var question_list = ['Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8'];
-        var question = tags.find(item => question_list.includes(item));
+        // var question_list = ['Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8'];
+        // var question = tags.find(item => question_list.includes(item));
+        var question_format = /Q\d{1,2}/;
+        var question = tags.find(item => question_format.test(item));
         if (question !== undefined) {
             var url = url_pre+question+"/run";
             $.ajax({

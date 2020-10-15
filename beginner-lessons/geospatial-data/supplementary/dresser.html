@@ -7,6 +7,12 @@
 
     <!-- load D3 -->
     <script src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+      
+    <!-- logging: load jQuery (bundled with Jupyter; only needed outside of Jupyter) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- logging: load jQuery md5 plugin -->
+    <script src="https://rawcdn.githack.com/placemarker/jQuery-MD5/b985fce4e867773e5fb7a29b4fb5df74c53595d0/jquery.md5.js"></script>
 
     <!-- global styles -->
     <style>
@@ -93,11 +99,19 @@
     </svg>
 
     <script>
+        
+      // variables for logging
+      var username = location.href.split('/')[4];
+      var username_hash = $.md5(username);
+      var user_agent_hash = $.md5(navigator.userAgent);
+      var answer
+      var url_pre = "https://check.hourofci.org:4000/"+username_hash+"/"+user_agent_hash+"/geospatial-data/beginner/Q4/";
+        
       var body = d3.select("body");
       var svg = d3.select("#dresser");
       var open = false;
       var done = false;
-
+        
       // draw side of drawer
       var side = svg.append("rect")
         .attr("width", 12).attr("height", 50)
@@ -107,10 +121,28 @@
         .style("display", "none");
 
       // draw hippo
-      var hippo = svg.append("image").attr("xlink:href", "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/geospatial-data/supplementary/hippo.svg")
+      var hippo = svg.append("image").attr("xlink:href", "https://raw.githubusercontent.com/hourofci/lessons-dev/master/beginner-lessons/geospatial-data/supplementary/hippo.svg")
         .attr("width", 90).attr("height", 80)
         .attr("x", 270).attr("y", 105)
         .style("display", "none");
+        
+      // logging
+      var incorrect = d3.select('svg').selectAll("*:not(.correct)").on("click", function() {
+        // log "False" when click incorrect space
+        answer = "False"
+        url = url_pre+answer;
+        // $.get(url)
+        $.ajax({
+          type: 'GET',
+          url: url,
+          success: function() {
+            console.log("Answer is false");
+          },
+          error: function() {
+            alert("Error");
+          }
+        });
+      });
 
       var correct = d3.selectAll(".correct").on("click", function() {
         if (!open) {
@@ -120,6 +152,22 @@
 
           // "pull" drawer
           correct.attr("transform", "translate(10,10)");
+
+          // logging: log "True" when click the correct space
+          answer = "True";
+          url = url_pre+answer;
+          // $.get(url)
+
+          $.ajax({
+            type: 'GET',
+            url: url,
+            success: function() {
+              console.log("Answer is true");
+            },
+            error: function() {
+              alert("Error");
+            }
+          });
 
           // display message if first completion
           if (!done) {

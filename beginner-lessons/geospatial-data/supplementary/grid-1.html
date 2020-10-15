@@ -7,6 +7,12 @@
 
     <!-- load D3 -->
     <script src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+      
+    <!-- load jQuery (bundled with Jupyter; only needed outside of Jupyter) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- load jQuery md5 plugin -->
+    <script src="https://rawcdn.githack.com/placemarker/jQuery-MD5/b985fce4e867773e5fb7a29b4fb5df74c53595d0/jquery.md5.js"></script>
 
     <!-- global styles -->
     <style>
@@ -23,6 +29,13 @@
 
   <body>
     <script>
+      // variables for logging
+      var username = location.href.split('/')[4];
+      var username_hash = $.md5(username);
+      var user_agent_hash = $.md5(navigator.userAgent);
+      var answer
+      var url_pre = "https://check.hourofci.org:4000/"+username_hash+"/"+user_agent_hash+"/geospatial-data/beginner/Q2/";
+        
       var grid_dim = 420;
       var shape_dim = 40;
       var body = d3.select("body");
@@ -261,11 +274,80 @@
             break;
         }
       }
+        
+      // logging: log "False" when drag to the incorrect space
+      function incorrect_logging() {
+        // log "False" when click incorrect space
+        answer = "False"
+        url = url_pre+answer;
+        // $.get(url)
+        $.ajax({
+          type: 'GET',
+          url: url,
+          success: function() {
+            console.log("Answer is false");
+          },
+          error: function() {
+            alert("Error");
+          }
+        });
+      }
+        
+      // logging: log "True" when drag to the correct space
+      function correct_logging() {
+        answer = "True";
+        url = url_pre+answer;
+        // $.get(url)
+        $.ajax({
+          type: 'GET',
+          url: url,
+          success: function() {
+            console.log("Answer is true");
+          },
+          error: function() {
+             alert("Error");
+          }
+        });
+      
+      }
+        
+      // logging: log "Success" when all the symbols are dragged to correct position 
+      function success_logging() {
+        answer = "Success";
+        url = url_pre+answer;
+        // $.get(url)
+        $.ajax({
+          type: 'GET',
+          url: url,
+          success: function() {
+            console.log("Success!");
+          },
+          error: function() {
+             alert("Error");
+          }
+        });
+      }
 
       // success animation
       function success(x, y) {
+        svg.append("text").text("Nice!")
+          .classed("success", true)
+          .attr("x", x-10)
+          .attr("y", y-10)
+          .attr("fill", "lime")
+          .attr("fill-opacity", 0)
+          .attr("stroke", "none")
+          .attr("font-size", 30)
+          .transition().duration(800)
+            .attr("fill-opacity", 1)
+          .transition().duration(1500)
+            .attr("fill-opacity", 0);
+
+        correct++;
+        correct_logging();
+          
         // check if all shapes are correct
-        if (correct >= 8) {
+        if (correct == 9) {
           finish.append("text").text("Congrats! You intuitively used each symbol's")
             .classed("complete", true)
             .attr("x", 10)
@@ -291,22 +373,10 @@
             .attr("font-size", 20)
             .transition().duration(800)
               .attr("fill-opacity", 1);
+          
+          success_logging();
         }
-
-        svg.append("text").text("Nice!")
-          .classed("success", true)
-          .attr("x", x-10)
-          .attr("y", y-10)
-          .attr("fill", "lime")
-          .attr("fill-opacity", 0)
-          .attr("stroke", "none")
-          .attr("font-size", 30)
-          .transition().duration(800)
-            .attr("fill-opacity", 1)
-          .transition().duration(1500)
-            .attr("fill-opacity", 0);
-
-        correct++;
+          
       }
 
       // retry animation
@@ -323,6 +393,8 @@
             .attr("fill-opacity", 1)
           .transition().duration(1500)
             .attr("fill-opacity", 0);
+          
+        incorrect_logging();
       }
 
       // reset activity
@@ -355,6 +427,9 @@
         d3.select("#decagon")
           .attr("x", 535)
           .attr("y", 100);
+        
+        // reset the number of correct shapes
+        correct = 0;
 
         // clear success and failure messages
         d3.selectAll(".success").style("fill-opacity", 0);
