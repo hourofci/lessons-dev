@@ -7,8 +7,13 @@
     <title>D3 Feelings</title>
 
     <!-- load D3 -->
-    <script
-        src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+    <script src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+    
+    <!-- logging: load jQuery (bundled with Jupyter; only needed outside of Jupyter) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- logging: load jQuery md5 plugin -->
+    <script src="https://rawcdn.githack.com/placemarker/jQuery-MD5/b985fce4e867773e5fb7a29b4fb5df74c53595d0/jquery.md5.js"></script>
 
     <!-- global styles -->
     <style>
@@ -33,6 +38,13 @@
 
 <body>
     <script>
+        // variables for logging
+        var username = location.href.split('/')[4];
+        var username_hash = $.md5(username);
+        var user_agent_hash = $.md5(navigator.userAgent);
+        var answer;
+        var url_pre = "https://check.hourofci.org:4000/"+username_hash+"/"+user_agent_hash+"/interdisciplinary-communication/beginner/Q11/";
+        
         var body = d3.select("body");
         var svg = body.append("svg")
             .attr("width", 500)
@@ -83,6 +95,41 @@
                 groups = groups.filter(function (item) { return item !== select; });
             }
         }
+        
+        // logging: log "False" when the anser is incorrect 
+        function incorrect_logging() {
+          // log "False" when click incorrect space
+          answer = false;
+          url = url_pre+answer;
+          // $.get(url)
+          $.ajax({
+            type: 'GET',
+            url: url,
+            success: function() {
+              console.log("Answer is false");
+            },
+            error: function() {
+              alert("Error");
+            }
+          });
+        }
+        
+        // logging: log "True" when the answer is correct
+        function correct_logging() {
+          answer = true;
+          url = url_pre+answer;
+          // $.get(url)
+          $.ajax({
+            type: 'GET',
+            url: url,
+            success: function() {
+              console.log("Answer is true");
+            },
+            error: function() {
+              alert("Error");
+            }
+          });
+        }
 
         // check feeling
         function check(feeling) {
@@ -94,29 +141,37 @@
                     if (feeling === "Bored" || feeling === "Confused" || feeling == "Frustrated") {
                         message.style("color", "green").text("Yes, this feeling is likely given the disconnect between speaker and audience.");
                         draw();
+                        correct_logging();
                     } else {
                         message.style("color", "red").text("That feeling might not be the most likely given the context.");
+                        incorrect_logging();
                     }
                 } else if (audience === "Advanced Classroom") {
                     if (feeling === "Interested") {
                         message.style("color", "green").text("Yes, this feeling is likely given the similar perspective of speaker and audience.");
                         draw();
+                        correct_logging();
                     } else {
                         message.style("color", "red").text("That feeling might not be the most likely given the context.");
+                        incorrect_logging();
                     }
                 } else if (audience === "Expert Symposium") {
                     if (feeling === "Interested") {
                         message.style("color", "green").text("Yes, this feeling is likely given the similar perspective of speaker and audience.");
                         draw();
+                        correct_logging();
                     } else {
                         message.style("color", "red").text("That feeling might not be the most likely given the context.");
+                        incorrect_logging();
                     }
                 } else if (audience === "General Interest Crowd") {
                     if (feeling === "Bored" || feeling === "Confused" || feeling == "Frustrated") {
                         message.style("color", "green").text("Yes, this feeling is likely given the disconnect between speaker and audience.");
                         draw();
+                        correct_logging();
                     } else {
                         message.style("color", "red").text("That feeling might not be the most likely given the context.");
+                        incorrect_logging();
                     }
                 }
             } else if (speaker === "Expert without Jargon") {
@@ -124,29 +179,37 @@
                     if (feeling === "Interested") {
                         message.style("color", "green").text("Yes, this feeling is likely given the similar perspective of speaker and audience.");
                         draw();
+                        correct_logging();
                     } else {
                         message.style("color", "red").text("That feeling might not be the most likely given the context.");
+                        incorrect_logging();
                     }
                 } else if (audience === "Advanced Classroom") {
                     if (feeling === "Bored") {
                         message.style("color", "green").text("Yes, this feeling is likely given the similar perspective of speaker and audience.");
                         draw();
+                        correct_logging();
                     } else {
                         message.style("color", "red").text("That feeling might not be the most likely given the context.");
+                        incorrect_logging();
                     }
                 } else if (audience === "Expert Symposium") {
                     if (feeling === "Bored") {
                         message.style("color", "green").text("Yes, this feeling is likely given the disconnect between speaker and audience.");
                         draw();
+                        correct_logging();
                     } else {
                         message.style("color", "red").text("That feeling might not be the most likely given the context.");
+                        incorrect_logging();
                     }
                 } else if (audience === "General Interest Crowd") {
                     if (feeling === "Interested") {
                         message.style("color", "green").text("Yes, this feeling is likely given the similar perspective of speaker and audience.");
                         draw();
+                        correct_logging();
                     } else {
                         message.style("color", "red").text("That feeling might not be the most likely given the context.");
+                        incorrect_logging();
                     }
                 }
             } else if (speaker === "Novice with Jargon") {
@@ -154,29 +217,37 @@
                     if (feeling === "Confused" || feeling === "Frustrated") {
                         message.style("color", "green").text("Yes, this feeling is likely give the disconnect between speaker, audience, and content familiarity.");
                         draw();
+                        correct_logging();
                     } else {
                         message.style("color", "red").text("That feeling might be possible, but not the most likely, given the context.");
+                        incorrect_logging();
                     }
                 } else if (audience === "Advanced Classroom") {
                     if (feeling === "Confused" || feeling === "Frustrated") {
                         message.style("color", "green").text("Yes, this feeling is likely give the disconnect between speaker, audience, and content familiarity.");
                         draw();
+                        correct_logging();
                     } else {
                         message.style("color", "red").text("That feeling might be possible, but not the most likely, given the context.");
+                        incorrect_logging();
                     }
                 } else if (audience === "Expert Symposium") {
                     if (feeling === "Confused" || feeling === "Frustrated") {
                         message.style("color", "green").text("Yes, this feeling is likely give the disconnect between speaker, audience, and content familiarity.");
                         draw();
+                        correct_logging();
                     } else {
                         message.style("color", "red").text("That feeling might be possible, but not the most likely, given the context.");
+                        incorrect_logging();
                     }
                 } else if (audience === "General Interest Crowd") {
                     if (feeling === "Confused" || feeling === "Frustrated") {
                         message.style("color", "green").text("Yes, this feeling is likely give the disconnect between speaker, audience, and content familiarity.");
                         draw();
+                        correct_logging();
                     } else {
                         message.style("color", "red").text("That feeling might be possible, but not the most likely, given the context.");
+                        incorrect_logging();
                     }
                 }
             } else if (speaker === "Novice without Jargon") {
@@ -184,29 +255,37 @@
                     if (feeling === "Interested") {
                         message.style("color", "green").text("Yes, this feeling is likely given the similar perspective of speaker and audience.");
                         draw();
+                        correct_logging();
                     } else {
                         message.style("color", "red").text("That feeling might be possible, but not the most likely, given the context.");
+                        incorrect_logging();
                     }
                 } else if (audience === "Advanced Classroom") {
                     if (feeling === "Bored" || feeling === "Confused" || feeling == "Frustrated") {
                         message.style("color", "green").text("Yes, this feeling is likely give the disconnect between speaker, audience, and content familiarity.");
                         draw();
+                        correct_logging();
                     } else {
                         message.style("color", "red").text("That feeling might be possible, but not the most likely, given the context.");
+                        incorrect_logging();
                     }
                 } else if (audience === "Expert Symposium") {
                     if (feeling === "Bored" || feeling === "Confused" || feeling == "Frustrated") {
                         message.style("color", "green").text("Yes, this feeling is likely give the disconnect between speaker, audience, and content familiarity.");
                         draw();
+                        correct_logging();
                     } else {
                         message.style("color", "red").text("That feeling might be possible, but not the most likely, given the context.");
+                        incorrect_logging();
                     }
                 } else if (audience === "General Interest Crowd") {
                     if (feeling === "Interested") {
                         message.style("color", "green").text("Yes, this feeling is likely given the similar perspective of speaker and audience.");
                         draw();
+                        correct_logging();
                     } else {
                         message.style("color", "red").text("That feeling might be possible, but not the most likely, given the context.");
+                        incorrect_logging();
                     }
                 }
             }
