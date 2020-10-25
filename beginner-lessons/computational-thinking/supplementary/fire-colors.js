@@ -96,6 +96,8 @@ function CreateTrees() {
             InitBurnY).style.backgroundColor = "red";
           IsRunning = true;
           IntervalID = setInterval(Step, INTERVAL_MILLIS);
+          // logging
+          run_logging();
         }
       });
       row.appendChild(tree);
