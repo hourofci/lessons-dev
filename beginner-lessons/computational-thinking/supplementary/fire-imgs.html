@@ -2,7 +2,14 @@
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/computational-thinking/supplementary/fire.css"/>
-    <script src="https://raw.githack.com/IrisZhiweiYan/lessons-dev/template-update/beginner-lessons/computational-thinking/supplementary/fire-imgs.js"></script>
+     <script src="https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/computational-thinking/supplementary/fire-imgs.js"></script>
+      
+    <!-- logging: load jQuery (bundled with Jupyter; only needed outside of Jupyter) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- logging: load jQuery md5 plugin -->
+    <script src="https://rawcdn.githack.com/placemarker/jQuery-MD5/b985fce4e867773e5fb7a29b4fb5df74c53595d0/jquery.md5.js"></script>
+      
   </head>
   <body>
     <div>
@@ -17,5 +24,29 @@
     <img src="https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/computational-thinking/supplementary/healthy.png" style="display: none;"/>
     <img src="https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/computational-thinking/supplementary/burning.png" style="display: none;"/>
     <img src="https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/computational-thinking/supplementary/burnt.png" style="display: none;"/>
+      
+    <script>
+      // variables for logging
+      var username = location.href.split('/')[4];
+      var username_hash = $.md5(username);
+      var user_agent_hash = $.md5(navigator.userAgent);
+      var answer
+      var url_pre = "https://check.hourofci.org:4000/"+username_hash+"/"+user_agent_hash+"/computational-thinking/beginner/Q1/";
+      
+      function run_logging() {
+        answer = "run";
+        url = url_pre+answer;
+        $.ajax({
+          type: 'GET',
+          url: url,
+          success: function() {
+            console.log("Played with the example");
+          },
+          error: function() {
+            alert("Error");
+          }
+        });
+      }
+    </script>
   </body>
 </html>

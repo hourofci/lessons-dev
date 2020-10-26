@@ -7,6 +7,12 @@
 
     <!-- load D3 -->
     <script src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+      
+    <!-- logging: load jQuery (bundled with Jupyter; only needed outside of Jupyter) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- logging: load jQuery md5 plugin -->
+    <script src="https://rawcdn.githack.com/placemarker/jQuery-MD5/b985fce4e867773e5fb7a29b4fb5df74c53595d0/jquery.md5.js"></script>
 
     <!-- global styles -->
     <style>
@@ -56,8 +62,16 @@
     </svg>
 
     <script>
+      // variables for logging
+      var username = location.href.split('/')[4];
+      var username_hash = $.md5(username);
+      var user_agent_hash = $.md5(navigator.userAgent);
+      var answer
+      var url_pre = "https://check.hourofci.org:4000/"+username_hash+"/"+user_agent_hash+"/interdisciplinary-communication/beginner/Q1/";
+        
       var body = d3.select("body");
       var activep1 = true;
+      var log1 = false;
 
       // first phase of activity
       function phaseOne() {
@@ -84,7 +98,7 @@
                 list.text("Selected: " + unknown.join(', '));
                 d3.select(this).style("stroke", "red").style("opacity", 0.4);
                 u_count++;
-              }
+              } 
             }
 
             // display message after three words selected
@@ -97,6 +111,24 @@
               body.append("p").style("color", "white")
                 .text("It can be difficult to have conversations, discussions, and dialogue with people from academic domains we don’t understand.")
                 .transition().style("color", "green").duration(2000);
+            }
+            
+            // logging: log unknown data after three words selected
+            if (activep1 == false && log1 == false) { 
+              log1 = true;
+              answer = unknown;
+              url = url_pre+answer;
+              // $.get(url)
+              $.ajax({
+                type: 'GET',
+                url: url,
+                success: function() {
+                  console.log("Answer is " + answer);
+                },
+                error: function() {
+                  alert("Error");
+                }
+              });
             }
           }
         });

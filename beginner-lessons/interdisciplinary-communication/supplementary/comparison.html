@@ -7,6 +7,12 @@
 
     <!-- load D3 -->
     <script src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+      
+    <!-- logging: load jQuery (bundled with Jupyter; only needed outside of Jupyter) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- logging: load jQuery md5 plugin -->
+    <script src="https://rawcdn.githack.com/placemarker/jQuery-MD5/b985fce4e867773e5fb7a29b4fb5df74c53595d0/jquery.md5.js"></script>
 
     <!-- global styles -->
     <style>
@@ -52,10 +58,10 @@
       var yStored = false;
 
       // presentation text type array (for random slot assignment)
-      var descriptors = ["https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/interdisciplinary-communication/supplementary/j1-rich-precise.png",
-                         "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/interdisciplinary-communication/supplementary/j2-rich-detailed.png",
-                         "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/interdisciplinary-communication/supplementary/j3-light-long.png",
-                         "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/interdisciplinary-communication/supplementary/j4-none-direct.png"];
+      var descriptors = ["https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/interdisciplinary-communication/supplementary/j1-rich-precise.png",
+                         "https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/interdisciplinary-communication/supplementary/j2-rich-detailed.png",
+                         "https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/interdisciplinary-communication/supplementary/j3-light-long.png",
+                         "https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/interdisciplinary-communication/supplementary/j4-none-direct.png"];
 
       // append sliding cards
       svg.append("image")
@@ -161,11 +167,52 @@
       body.append("br");
       body.append("br");
       
-      // display message only once
+      // variables for logging
+      var username = location.href.split('/')[4];
+      var username_hash = $.md5(username);
+      var user_agent_hash = $.md5(navigator.userAgent);
+      var answer;
+      var url_pre = "https://check.hourofci.org:4000/"+username_hash+"/"+user_agent_hash+"/interdisciplinary-communication/beginner/Q7/";
+      
+      // logging: log True/False when click the submit button
       body.append("button").text("Submit").on("click", function() {
+        var submission = [];
+        var link_arr;
+        link_arr = d3.select("image[y='0']").attr("xlink:href").split('/');
+        submission.push(link_arr[link_arr.length - 1]);
+        link_arr = d3.select("image[y='60']").attr("xlink:href").split('/');
+        submission.push(link_arr[link_arr.length - 1]);
+        link_arr = d3.select("image[y='120']").attr("xlink:href").split('/');
+        submission.push(link_arr[link_arr.length - 1]);
+        link_arr = d3.select("image[y='180']").attr("xlink:href").split('/');
+        submission.push(link_arr[link_arr.length - 1]);
+        
+        var correct = ["j1-rich-precise.png","j2-rich-detailed.png","j3-light-long.png","j4-none-direct.png"];
+        answer = (submission.toString() === correct.toString());
+        url = url_pre+answer;
+        // $.get(url)
+        $.ajax({
+          type: 'GET',
+          url: url,
+          success: function() {
+            console.log(submission);
+            console.log("Answer is " + answer);
+          },
+          error: function() {
+            alert("Error");
+          }
+        });
+        
         if (!document.getElementById("message")) {
-          body.append("p").attr("id", "message").text("Submitted!").style("display", "inline");
+            body.append("p").attr("id", "message");
+        }  
+        if (answer == true) {
+          d3.select("p[id='message']").text("Correct!").style("display", "inline");
         }
+        else {
+          d3.select("p[id='message']").text("Try Again").style("display", "inline");  
+        }
+         
       });
     </script>
   </body>
