@@ -5,6 +5,9 @@ onload = function () {
 };
 
 function doAlgoStep1() {
+  // logging
+  run_logging();
+    
   remove("hand");
   remove("go-button");
 

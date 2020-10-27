@@ -95,6 +95,8 @@ function CreateTrees() {
             InitBurnY).style.backgroundImage = "url(\"https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/computational-thinking/supplementary/burning.png\")";
           IsRunning = true;
           IntervalID = setInterval(Step, INTERVAL_MILLIS);
+          // logging
+          run_logging();
         }
       });
       row.appendChild(tree);

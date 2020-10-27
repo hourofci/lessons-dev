@@ -76,6 +76,9 @@ function showHand() {
 }
 
 function doAlgoStep1a() {
+  // logging
+  run_logging();
+    
   remove("hand");
   remove("go-button");
 

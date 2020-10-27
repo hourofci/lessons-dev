@@ -7,6 +7,12 @@
 
     <!-- load D3 -->
     <script src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+      
+    <!-- logging: load jQuery (bundled with Jupyter; only needed outside of Jupyter) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- logging: load jQuery md5 plugin -->
+    <script src="https://rawcdn.githack.com/placemarker/jQuery-MD5/b985fce4e867773e5fb7a29b4fb5df74c53595d0/jquery.md5.js"></script>
 
     <!-- global styles -->
     <style>
@@ -21,6 +27,13 @@
 
   <body>
     <script>
+      // variables for logging
+      var username = location.href.split('/')[4];
+      var username_hash = $.md5(username);
+      var user_agent_hash = $.md5(navigator.userAgent);
+      var answer
+      var url_pre = "https://check.hourofci.org:4000/"+username_hash+"/"+user_agent_hash+"/interdisciplinary-communication/beginner/Q9/";
+        
       var body = d3.select("body");
       var svg = body.append("svg")
         .attr("width", 700)
@@ -282,30 +295,71 @@
           drag(d3.selectAll(".card"));
         }
 
+        // logging: log "False" when drag to the incorrect space
+        function incorrect_logging() {
+          // log "False" when click incorrect space
+          answer = false;
+          url = url_pre+answer;
+          // $.get(url)
+          $.ajax({
+            type: 'GET',
+            url: url,
+            success: function() {
+              console.log("Answer is false");
+            },
+            error: function() {
+              alert("Error");
+            }
+          });
+        }
+        
+        // logging: log "True" when drag to the correct space
+        function correct_logging() {
+          answer = true;
+          url = url_pre+answer;
+          // $.get(url)
+          $.ajax({
+            type: 'GET',
+            url: url,
+            success: function() {
+              console.log("Answer is true");
+            },
+            error: function() {
+              alert("Error");
+            }
+          });
+        }
+        
         // top left bin solution checking
         function checkEF(e) {
           if (e === "We") {
             msg.transition().duration(800).text("Very good! Experts in the field should be best equipped to parse this statement.")
               .style("color", "#32C90F");
             drawCard();
+            correct_logging();
           } else if (e === "Let's") {
             msg.transition().duration(800).text("Try again! This statement might be too simplified for this group.")
               .style("color", "red");
+            incorrect_logging();
           } else if (e === "I'm") {
             msg.transition().duration(800).text("Try again! This statement might be too simple or obvious for this group.")
               .style("color", "red");
+            incorrect_logging();
           } else if (e === "The") {
             msg.transition().duration(800).text("Very good! Connecting a piece of jargon to another domain's jargon can easily bridge gaps between different bases of expertise.")
               .style("color", "#32C90F");
             drawCard();
+            correct_logging();
           } else if (e === "As") {
             msg.transition().duration(800).text("Very good! Use of names of theorists, researchers, or authors are often pointers for expertise.")
               .style("color", "#32C90F");
             drawCard();
+            correct_logging();
           } else if (e === "Now,") {
             msg.transition().duration(800).text("Very good! An invitation to conversation on a particularly troublesome term can lead to a better understanding of what the background of your audience might be.")
               .style("color", "#32C90F");
             drawCard();
+            correct_logging();
           }
         }
 
@@ -314,24 +368,30 @@
           if (e === "We") {
             msg.transition().duration(800).text("Try Again! This statement probably wouldn't be understandable to this group.")
               .style("color", "red");
+            incorrect_logging();
           } else if (e === "Let's") {
             msg.transition().duration(800).text("Very good! Defining the term broadly helps non-experts in a given domain.")
               .style("color", "#32C90F");
             drawCard();
+            correct_logging();
           } else if (e === "I'm") {
             msg.transition().duration(800).text("Very good! Defining the term broadly and giving examples helps non-experts in a given domain.")
               .style("color", "#32C90F");
             drawCard();
+            correct_logging();
           } else if (e === "The") {
             msg.transition().duration(800).text("Try Again! This statement probably wouldn't be understandable to this group.")
               .style("color", "red");
+            incorrect_logging();
           } else if (e === "As") {
             msg.transition().duration(800).text("Try Again! This statement probably wouldn't be understandable to this group.")
               .style("color", "red");
+            incorrect_logging();
           } else if (e === "Now,") {
             msg.transition().duration(800).text("Very good! An invitation to conversation on a particularly troublesome term can lead to a better understanding of what the background of your audience might be.")
               .style("color", "#32C90F");
             drawCard();
+            correct_logging();
           }
         }
 
@@ -340,24 +400,30 @@
           if (e === "We") {
             msg.transition().duration(800).text("Try Again! This statement probably wouldn't be understandable to this group.")
               .style("color", "red");
+            incorrect_logging();
           } else if (e === "Let's") {
             msg.transition().duration(800).text("Very good! Defining the term broadly helps non-experts in a given domain.")
               .style("color", "#32C90F");
             drawCard();
+            correct_logging();
           } else if (e === "I'm") {
             msg.transition().duration(800).text("Very good! Defining the term broadly and giving examples helps non-experts in a given domain.")
               .style("color", "#32C90F");
             drawCard();
+            correct_logging();
           } else if (e === "The") {
             msg.transition().duration(800).text("Try Again! This statement probably wouldn't be understandable to this group.")
               .style("color", "red");
+            incorrect_logging();
           } else if (e === "As") {
             msg.transition().duration(800).text("Try Again! This statement probably wouldn't be understandable to this group.")
               .style("color", "red");
+            incorrect_logging();
           } else if (e === "Now,") {
             msg.transition().duration(800).text("Very good! An invitation to conversation on a particularly troublesome term can lead to a better understanding of what the background of your audience might be.")
               .style("color", "#32C90F");
             drawCard();
+            correct_logging();
           }
         }
 
@@ -366,25 +432,31 @@
           if (e === "We") {
             msg.transition().duration(800).text("Try Again! This statement probably wouldn't be understandable to this group.")
               .style("color", "red");
+            incorrect_logging();
           } else if (e === "Let's") {
             msg.transition().duration(800).text("Very good! Defining the term broadly helps non-experts in a given domain.")
               .style("color", "#32C90F");
             drawCard();
+            correct_logging();
           } else if (e === "I'm") {
             msg.transition().duration(800).text("Very good! Defining the term broadly and giving examples helps non-experts in a given domain.")
               .style("color", "#32C90F");
             drawCard();
+            correct_logging();
           } else if (e === "The") {
             msg.transition().duration(800).text("Very good! Connecting a piece of jargon to another domain's jargon can easily bridge gaps between different bases of expertise.")
               .style("color", "#32C90F");
             drawCard();
+            correct_logging();
           } else if (e === "As") {
             msg.transition().duration(800).text("Try Again! This statement probably wouldn't be understandable to this group.")
               .style("color", "red");
+            incorrect_logging();
           } else if (e === "Now,") {
             msg.transition().duration(800).text("Very good! An invitation to conversation on a particularly troublesome term can lead to a better understanding of what the background of your audience might be.")
               .style("color", "#32C90F");
             drawCard();
+            correct_logging();
           }
         }
 
