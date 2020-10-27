@@ -1,4 +1,4 @@
-/* This is main.css for RISE
+/* This is main.css for RISE for the Hour of CI
    We do this to completely override any RISE settings that may be set by local install
    so that we can have a consistent user experience.
    Original credit goes to RISE team
@@ -16,36 +16,10 @@
 }
 .rise-enabled {
 
-/*    FIXME: REMOVING FOR TESTING, PUT BACK 
-    transition-property: all;
-  transition-duration: 0.2s;
-  transition-timing-function: ease;
-  background-color: #fff;
-*/
-
-    /* Reveal-specific */
-  /* Notebook-specific */
-  /* chalkboard plugin and RISE buttons */
-  /* button toolbar */
-  /* use !important to override stuff that
-    would normally be configured through
-    chalkboard options */
 }
 .rise-enabled .reveal {
   /* element-overrides */
 }
-
-
-
-/*
-FIXME: REMOVING FOR TESTING, PUT BACK
-.rise-enabled .reveal.fade {
-  transition-property: all;
-  transition-duration: 0.2s;
-  transition-timing-function: ease;
-  opacity: 1;
-}
-*/
 
 .rise-enabled .reveal pre {
   transition-property: all;
@@ -175,7 +149,7 @@ FIXME: REMOVING FOR TESTING, PUT BACK
   line-height: 160%;
 }
 .rise-enabled .text_cell {
-  font-size: 120%;
+  font-size: 105%; /* Updated to improve fit for Chromebooks */
 }
 .rise-enabled .text_cell .prompt {
   display: none;
@@ -547,7 +521,7 @@ div.run_this_cell {
   /*margin: auto;*/
   margin: 5px 5px 20px 5px;
   border-collapse: collapse;
-  font-size: smaller;
+  font-size: inherit; /* Increasing font size for tables, changed from smaller */
   border-spacing: 0; }
 
 .reveal table th {
