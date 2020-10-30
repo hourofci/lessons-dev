@@ -7,17 +7,14 @@ requirejs.config({
 
 requirejs(['jquery','jquery.md5'],
 function ($) {
-//     alert("hello");
     
-    // retrieve info variables
-    var username = location.href.split('/')[4];
-    var username_hash = $.md5(username);
+    // Retrieve info variables
     var user_agent_hash = $.md5(navigator.userAgent);
     var lesson = location.href.split('/')[8]; // "template"; 
     var lesson_level = location.href.split('/')[7].split('-')[0]; // "beginner";
-    var url_pre = "https://check.hourofci.org:4000/"+username_hash+"/"+user_agent_hash+"/"+lesson+"/"+lesson_level+"/"
+    var url_pre = "https://check.hourofci.org:4000/"+user_agent_hash+"/"+lesson+"/"+lesson_level+"/"
     
-    // assign the user agent string, lesson and lesson level to Python variables; they will be passed to the hourofci submit button
+    // Assign the user agent string, lesson and lesson level to Python variables; they will be passed to the hourofci submit button
     Jupyter.notebook.kernel.execute("user_agent = " + "'" + navigator.userAgent + "'");
     Jupyter.notebook.kernel.execute("lesson = " + "'" + lesson + "'");
     Jupyter.notebook.kernel.execute("lesson_level = " + "'" + lesson_level + "'");
@@ -30,12 +27,12 @@ function ($) {
         );
     }
     
-    // execute the 'Init' cells
-    // get the init cell index
+    // Execute the 'Init' cells
+    // Get the init cell index
     var init_cells = findCellByTag('Init').map((cell) => Jupyter.notebook.find_cell_index(cell))
     Jupyter.notebook.execute_cells(init_cells);
     
-    // hide input of the 'Hide' cells
+    // Hide input of the 'Hide' cells
     var hide_cells = findCellByTag('Hide');
     var display = true; 
     function toggle() {
@@ -52,12 +49,12 @@ function ($) {
         toggle();
     });
     
-    // hide output indicator (e.g. `Out [4]:`)
-    $(".output_prompt").css("opacity", 0);
+    // Hide output indicator (e.g. `Out [4]:`)
+    // $(".output_prompt").css("opacity", 0);
     
-    // logging
+    // Logging
 
-    // customize the click function of the play button
+    // Customize the click function of the play button
     var run_this_cell = $('.run_this_cell');
     run_this_cell.off('click').click(function(event){
         event.stopImmediatePropagation();
@@ -72,9 +69,8 @@ function ($) {
     
         // hit the API url if it is a question
         var tags = cell.metadata.tags;
-        // var question_list = ['Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8'];
         // var question = tags.find(item => question_list.includes(item));
-        var question_format = /Q\d{1,2}/;
+        var question_format = /[1-9][A-Z]/;
         var question = tags.find(item => question_format.test(item));
         if (question !== undefined) {
             var url = url_pre+question+"/run";

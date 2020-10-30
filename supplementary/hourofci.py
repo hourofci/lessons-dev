@@ -1,16 +1,12 @@
 import ipywidgets as widgets
 from ipywidgets import Layout
 import requests
-# Retrieve username
-import getpass
 # Encoding
 import hashlib
 
-# Execute a notebook
-import io
-import nbformat 
-from IPython import get_ipython
-
+# Default response of a question
+# def out():
+#     print("Answer successfully submitted.\n")
 def out():
     pass
 
@@ -23,7 +19,7 @@ def SubmitBtn(user_agent, lesson, lesson_level, question,widget,out_func=out,tex
     lesson_level (e.g., "beginner")
     question - defined behind instead of in the notebooks
     widget - the widget of which value will be submitted
-    out_func - printing after the button is clicked (default value is an empty function)
+    out_func - printing after the button is clicked (default output is "Answer successfully submitted.\n")
     text - description that shows on the button (default value is "Submit")
     """
 
@@ -58,22 +54,11 @@ def SubmitBtn(user_agent, lesson, lesson_level, question,widget,out_func=out,tex
                 answer.append(widget[i].value)
         else:
             answer = widget.value
-        
-        # Retrieve username
-        if str(getpass.getuser()).split('-')[0] == "jupyter":
-            username = str(getpass.getuser()).split('-')[1] # In Jupyterhub, getuser() = Jupyter-username
-        else:
-            username = str(getpass.getuser())
-        # Encode username
-        username_hash = hashlib.md5(username.encode()).hexdigest()
 
         # Encode user agent
         user_agent_hash = hashlib.md5(user_agent.encode()).hexdigest()
 
-        # Add username 
-        # Add user agent
-        url = "https://{}:{}/{}/{}/{}/{}/{}/{}".format(host, port, username_hash, user_agent_hash, lesson, lesson_level, question, str(answer))
-        # print(url)
+        url = "https://{}:{}/{}/{}/{}/{}/{}".format(host, port, user_agent_hash, lesson, lesson_level, question, str(answer))
         # Send_request
         r = requests.get(url)
 
@@ -85,8 +70,9 @@ def SubmitBtn(user_agent, lesson, lesson_level, question,widget,out_func=out,tex
                 # print("Your answer is: " + str(answer))
                 pass 
             
-            # if r.status_code == requests.codes.ok:
-            #     print("Submit Successfully!\n")
+            if r.status_code == requests.codes.ok:
+                print("Answer successfully submitted.\n")
+                
             out_func()
     
     button.on_click(submit)
