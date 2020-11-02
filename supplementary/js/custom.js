@@ -69,7 +69,6 @@ function ($) {
     
         // hit the API url if it is a question
         var tags = cell.metadata.tags;
-        // var question = tags.find(item => question_list.includes(item));
         var question_format = /[1-9][A-Z]/;
         var question = tags.find(item => question_format.test(item));
         if (question !== undefined) {
@@ -86,6 +85,32 @@ function ($) {
             });
         }
     });
-
+    
+    // Record answers through a link
+    $('.link-logging').off('click').click(function() {
+        var cell_element = $(this).parents('.cell');
+        var cell_idx = Jupyter.notebook.get_cell_elements().index(cell_element);
+        var cell = Jupyter.notebook.get_cell(cell_idx);
+        var answer = $(this).text();
+        
+        // hit the API url if it is a question
+        var tags = cell.metadata.tags;
+        var question_format = /[1-9][A-Z]/;
+        var question = tags.find(item => question_format.test(item));
+        if (question !== undefined) {
+            var url = url_pre+question+"/"+answer;
+            $.ajax({
+                type: 'GET',
+                url: url,
+                success: function() {
+                    console.log(answer);
+                },
+                error: function() {
+                    alert("Error");
+                }
+            });
+        }
+    });
+    
 });
 
