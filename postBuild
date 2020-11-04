@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Install and enable notebook extensions
 jupyter contrib nbextension install --user
 jupyter nbextension enable init_cell/main
