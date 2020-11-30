@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <title>D3 Catapult</title>
+
+    <!-- load D3 -->
+    <!--<script src="d3.min.js"></script>-->
+    <!--<script src="../../supplementary/js/d3.min.js"></script>-->
+    <script
+        src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script> 
+
+    <!-- global styles -->
+    <style>
+      body { margin: 0;
+             position: fixed;
+             top: 0;
+             right: 0;
+             bottom: 0;
+             left: 0;
+             font-family: helvetica, sans-serif;
+             -moz-user-select: none;
+             -webkit-user-select: none;
+             -ms-user-select: none;
+             user-select: none; }
+      path { fill: none; }
+      p    { margin: 0 10px 0; display: inline-block; }
+    </style>
+  </head>
+
+  <body>
+    <script>
+      // document globals
+      var margin = {top: 140, right: 50, bottom: 50, left: 15};
+      var width = 1060 - margin.left - margin.right;
+      var height = 500 - margin.top - margin.bottom;
+      var body = d3.select("body");
+      var svg = body.append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      // variable globals
+      var g = 9.81;
+      var v = 10;
+      var theta = 20;
+      var vx = v * Math.cos(theta * (Math.PI/180));
+      var vy = v * Math.sin(theta * (Math.PI/180));
+      var t = 0;
+      var step = 0.02;
+      var size = 0.5;
+      var strength = 0.5;
+      var boulderx = 100;
+      var bouldery = 155;
+      var bouldersize = 20;
+      var initialpos = true;
+      var count = 0;
+      var won = false;
+
+      // projectile motion (horizontal component)
+      var horizontal = function (x) {
+        t += step;
+        x = x + vx*t;
+        return x;
+      }
+      // projectile motion (vertical component)
+      var vertical = function (y) {
+        t += step;
+        y = y + vy - ((g/2)*t*t);
+        return y;
+      }
+
+      body.append("br")
+
+      var table = body.append("table");
+      var sizerow = table.append("tr");
+      var strengthrow = table.append("tr");
+
+      // sliders
+      sizerow.append("p")
+        .text("Payload Size: ")
+        .style("font-weight", "bold")
+
+      sizerow.append("p")
+      .text("Small")
+      .append("input")
+        .attr("id", "size")
+        .attr("type", "range")
+        .attr("min", 0.1)
+        .attr("max", 1)
+        .attr("step", 0.05)
+        .property("value", size)
+        .on("input", function () { size = this.value; update(strength, size); })
+
+      sizerow.append("p")
+        .text("Large")
+        .append("br")
+
+      strengthrow.append("p")
+        .text("Spring Strength: ")
+        .style("font-weight", "bold")
+
+      strengthrow.append("p")
+        .text("Weak")
+        .append("input")
+        .attr("id", "strength")
+        .attr("type", "range")
+        .attr("min", 0.1)
+        .attr("max", 1)
+        .attr("step", 0.05)
+        .property("value", 0.5)
+        .on("input", function () { strength = this.value; update(strength, size) });
+
+      strengthrow.append("p")
+        .text("Strong")
+        .append("br")
+        .append("br")
+
+      var boulder = newBoulder();
+
+      function update(strength, size) {
+        // reset time (for trajectory equations)
+        t = 0;
+
+        // x and y scaling
+        x = d3.scaleLinear()
+          .range([0, width*strength*(1/(2*size))]);
+        y = d3.scaleLinear()
+          .range([height, 0]);
+
+        var line = d3.line()
+          .x(function (d) { return x(d.x); })
+          .y(function (d) { return y(d.y); })
+          // smooth curve
+          .curve(d3.curveCatmullRom.alpha(0.5));
+
+        var data = d3.range(-10, 120).map(function (d) {
+          return { x:horizontal(d), y:vertical(d) };
+        });
+
+        // domain and range for trajectory
+        x.domain([d3.min(data, function (d) { return d.x; }), d3.max(data, function (d) { return d.x; })]);
+        y.domain([d3.min(data, function (d) { return d.y; }), d3.max(data, function (d) { return d.y; })]);
+
+        var path = svg.insert("path", ":first-child")
+          .attr("d", line(data))
+          // start line from catapult
+          .attr("transform", "translate(100,-120)");
+
+        // update boulder size based on payload selection
+        if (initialpos) {
+          boulder.transition()
+          .duration(500)
+          .attr("r", function() {
+            if (size >= 0.7) {
+              bouldersize = 30;
+            } else if (size <= 0.3) {
+              bouldersize = 10;
+            } else {
+              bouldersize = 20;
+            }
+            return bouldersize;
+          });
+        }
+
+        var pathLength = path.node().getTotalLength();
+
+        start.on("click", function() {
+          // increment attempt count if not won
+          if (!won) {
+            count++;
+            d3.select("#counter").text("Attempts: " + count);
+
+            // remove all old boulders
+            d3.selectAll("circle").filter().remove();
+          }
+
+          initialpos = false;
+          // catapult animation
+          arm.transition()
+            .attr("transform", "rotate(-30 240 340)")
+            .duration(500)
+            .transition()
+            .attr("transform", "rotate(0)");
+          // pull boulder back with arm
+          boulder.classed("old", true).transition()
+            .attr("transform", "rotate(-30 240 340)")
+            .duration(500)
+            .transition()
+            .attr("transform", "rotate(0)");
+
+          // draw trajectory if not already drawn
+          if (!path.classed("old")) {
+            path
+              .classed("old", true)
+              .attr("stroke", "red")
+              .attr("stroke-dasharray", pathLength + " " + pathLength)
+              .attr("stroke-dashoffset", pathLength)
+              .transition()
+              .delay(function() {
+                if (bouldersize == 30) { return 790; }
+                else { return 803; }
+              })
+              .duration(2500)
+              .ease(d3.easeLinear)
+              .attr("stroke-dashoffset", 0)
+              // darken to gray over time
+              .transition()
+              .duration(2500)
+              .attr("stroke", "darkgray");
+          }
+
+          var oldBoulder = boulder;
+
+          boulder.transition()
+            .delay(function () {
+              if (bouldersize == 30) { return 820; }
+              else { return 812; }
+            })
+            .duration(2500)
+            .ease(d3.easeLinear)
+            .attrTween("transform", follow(path.node()))
+            .on("start", function () {
+              // create new boulder after 200ms
+              setTimeout(function () { boulder = newBoulder(); }, 200);
+
+              setTimeout(function () {
+                t = oldBoulder.attr("transform");
+                // create empty g to store transformed coordinates
+                var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                g.setAttributeNS(null, "transform", t);
+                var matrix = g.transform.baseVal.consolidate().matrix;
+                var curpos = [matrix.e, matrix.f];
+                var curx = curpos[0];
+                var cury = curpos[1];
+
+                // check if target was hit
+                check(curx, cury);
+
+                // drop to ground and fade
+                oldBoulder.transition()
+                .attr("fill", "lightgray")
+                .ease(d3.easeLinear)
+                .attr("transform", function() {
+                  if (bouldersize == 20) {
+                    return "translate(" + (curx+40) + "," + (cury+140) + ")";
+                  } else if (bouldersize == 10) {
+                    return "translate(" + (curx+30) + "," + (cury+145) + ")";
+                  } else {
+                    return "translate(" + (curx+25) + "," + (cury+130) + ")";
+                  }
+                })
+              }, 2500)
+            })
+        }); // end click function
+
+        // follow path with boulder
+        function follow(path) {
+          var l = path.getTotalLength();
+          return function(d) {
+            return function(t) {
+              var p = path.getPointAtLength(t * l);
+              return "translate(" + (p.x-boulderx+100) + "," + (p.y-bouldery-120) + ")";
+            };
+          };
+        };
+      } // end update function
+
+      // catapult rendering
+      var arm = svg.append("svg:image")
+        .attr("xlink:href", "catapult-arm.svg")
+        .attr("width", 160)
+        .attr("height", 260)
+        .attr("x", 60)
+        .attr("y", 83);
+      var catapult = svg.append("svg:image")
+        .attr("xlink:href", "catapult-base.svg")
+        .attr("width", 260)
+        .attr("height", 260)
+        .attr("x", 40)
+        .attr("y", 155);
+
+        // target rendering
+        var target = svg.append("svg:image")
+          .attr("id", "target")
+          .attr("xlink:href", "target.svg")
+          .attr("width", 70)
+          .attr("height", 70)
+          .attr("x", 900)
+          .attr("y", 290);
+
+        // grass rendering
+        svg.append("svg:image")
+          .attr("xlink:href", "grass.png")
+            .attr("width", 1400)
+            .attr("height", 400)
+            .attr("x", -360)
+            .attr("y", 138)
+        svg.append("svg:image")
+          .attr("xlink:href", "grass.png")
+            .attr("width", 1400)
+            .attr("height", 400)
+            .attr("x", 300)
+            .attr("y", 138)
+
+      // draw trajectory animation on button click
+      var start = sizerow.append("button")
+        .text("Fire catapult")
+        .style("padding", "5px")
+        .style("margin-left", "60px");
+
+      // reset simulation
+      var reset = sizerow.append("button")
+        .text("Reset")
+        .style("padding", "5px")
+        .style("margin-left", "10px")
+        .on("click", function() {
+          won = false;
+
+          // reset attempt counter
+          count = 0;
+          d3.select("#counter").text("Attempts: 0");
+
+          // enable fire button
+          start.attr("disabled", null);
+
+          // remove all trajectories and old boulders
+          d3.selectAll(".old").remove();
+
+          update(strength, size);
+
+          // reset target
+          d3.select("#target").attr("opacity", 1)
+            .attr("x", 900)
+            .attr("y", 290);
+
+         // reset win message
+         d3.select("#message").attr("opacity", 0);
+        });
+
+      sizerow.append("p").attr("id", "counter").text("Attempts: 0")
+        .style("margin-left", "20px");
+
+      svg.append("text")
+        .attr("id", "message")
+        .attr("x", 400)
+        .attr("y", 100)
+        .attr("fill", "#32C90F")
+        .attr("stroke", "none")
+        .attr("font-size", "30px")
+        .attr("opacity", 0)
+        .text("Nice job! You hit the target.");
+
+      function newBoulder() {
+        initialpos = true;
+        var b = svg.insert("circle", ":first-child")
+          .attr("fill", "darkgray")
+          .attr("stroke", "black")
+          .attr("r", bouldersize)
+          .attr("cx", boulderx)
+          .attr("cy", bouldery)
+          .attr("id", "boulder")
+        return b;
+      }
+
+      function check(curx, cury) {
+        if (curx >= 760 && curx <= 800) {
+          won = true;
+
+          // disable fire button
+          start.attr("disabled", true);
+
+          // crush and fade out the target
+          target.transition().delay(220)
+            .attr("y", 320)
+            .attr("opacity", 0);
+
+          // show completion message
+          d3.select("#message").transition().delay(100)
+            .attr("opacity", 1);
+        }
+      }
+
+      update(strength, size);
+    </script>
+  </body>
+</html>
