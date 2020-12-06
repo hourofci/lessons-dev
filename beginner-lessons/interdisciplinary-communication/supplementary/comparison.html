@@ -45,6 +45,8 @@
   </head>
 
   <body>
+    <pre> <b>Jargon Descriptors</b>                      <b>GIS Definitions</b> </pre>
+      
     <script>
       var body = d3.select("body");
       var svg = body.append("svg")
@@ -172,7 +174,7 @@
       var username_hash = $.md5(username);
       var user_agent_hash = $.md5(navigator.userAgent);
       var answer;
-      var url_pre = "https://check.hourofci.org:4000/"+user_agent_hash+"/interdisciplinary-communication/beginner/2B/";
+      var url_pre = "https://check.hourofci.org:4000/"+user_agent_hash+"/interdisciplinary-communication/beginner/3B/";
       
       // logging: log True/False when click the submit button
       body.append("button").text("Submit").on("click", function() {

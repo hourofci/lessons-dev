@@ -33,7 +33,7 @@
       var username_hash = $.md5(username);
       var user_agent_hash = $.md5(navigator.userAgent);
       var answer
-      var url_pre = "https://check.hourofci.org:4000/"+username_hash+"/"+user_agent_hash+"/geospatial-data/beginner/Q4/";
+      var url_pre = "https://check.hourofci.org:4000/"+user_agent_hash+"/geospatial-data/beginner/4D/";
         
       var body = d3.select("body");
       var svg = body.append("svg")
@@ -66,7 +66,7 @@
       // logging: log "False" when click the incorrect space
       function incorrect_logging() {
         // log "False" when click incorrect space
-        answer = "False"
+        answer = false
         url = url_pre+answer;
         // $.get(url)
         $.ajax({
@@ -83,7 +83,7 @@
 
       // logging: log "True" when click the correct space
       function correct_logging() {
-        answer = "True";
+        answer = true;
         url = url_pre+answer;
         // $.get(url)
         $.ajax({
