@@ -11,7 +11,7 @@ def out():
     pass
 
 # Add user_agent parameter, which is from the notebook
-def SubmitBtn(user_agent, lesson, lesson_level, question,widget,out_func=out,text="Submit"):
+def SubmitBtn(user_agent, lesson, lesson_level, question,widget,out_func=out,text="Submit",test=False):
     """ Display a submit button
 
     Input:
@@ -57,8 +57,12 @@ def SubmitBtn(user_agent, lesson, lesson_level, question,widget,out_func=out,tex
 
         # Encode user agent
         user_agent_hash = hashlib.md5(user_agent.encode()).hexdigest()
-
-        url = "https://{}:{}/{}/{}/{}/{}/{}".format(host, port, user_agent_hash, lesson, lesson_level, question, str(answer))
+        
+        if test:
+            url = "https://{}:{}/test/{}/{}/{}/{}/{}".format(host, port, user_agent_hash, lesson, lesson_level, question, str(answer))
+        else:
+            url = "https://{}:{}/{}/{}/{}/{}/{}".format(host, port, user_agent_hash, lesson, lesson_level, question, str(answer))
+            
         # Send_request
         r = requests.get(url)
 

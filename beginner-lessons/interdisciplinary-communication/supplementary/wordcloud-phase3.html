@@ -37,6 +37,19 @@
   </head>
 
   <body>
+    <script>
+      var body = d3.select("body");
+        
+      var word = body.append("p")
+        .style("color", "green")
+        .style("font-weight", "bold")
+        .text("");
+
+      var definition = body.append("p")
+        .style("color", "green")
+        .text("");
+    </script>
+      
     <svg width="960" height="600" version="1.1" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <filter id="glow" x="-10%" y="-10%">
@@ -99,7 +112,7 @@
       var username_hash = $.md5(username);
       var user_agent_hash = $.md5(navigator.userAgent);
       var answer
-      var url_pre = "https://check.hourofci.org:4000/"+user_agent_hash+"/interdisciplinary-communication/beginner/2A/";
+      var url_pre = "https://check.hourofci.org:4000/"+user_agent_hash+"/interdisciplinary-communication/beginner/3A/";
         
       var body = d3.select("body");
 
@@ -194,17 +207,6 @@
         .text("https://github.com/jasondavies/d3-cloud");
       copyright.append("br");
       copyright.append("p").text("Copyright (c) 2013, Jason Davies. All rights reserved.");
-
-      body.append("br");
-
-      var word = body.append("p")
-        .style("color", "green")
-        .style("font-weight", "bold")
-        .text("");
-
-      var definition = body.append("p")
-        .style("color", "green")
-        .text("");
     </script>
   </body>
 </html>

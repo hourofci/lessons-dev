@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <title>D3 Jargon Sort</title>
+
+    <!-- load D3 -->
+    <script src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+      
+    <!-- logging: load jQuery (bundled with Jupyter; only needed outside of Jupyter) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- logging: load jQuery md5 plugin -->
+    <script src="https://rawcdn.githack.com/placemarker/jQuery-MD5/b985fce4e867773e5fb7a29b4fb5df74c53595d0/jquery.md5.js"></script>
+
+    <!-- global styles -->
+    <style>
+      body { font-family: Helvetica; }
+      svg  { -moz-user-select: none;
+             -webkit-user-select: none;
+             -ms-user-select: none;
+             user-select: none;
+           }
+    </style>
+  </head>
+
+  <body>
+    <script>
+      // variables for logging
+      var username = location.href.split('/')[4];
+      var username_hash = $.md5(username);
+      var user_agent_hash = $.md5(navigator.userAgent);
+      var answer
+      var url_pre = "https://check.hourofci.org:4000/"+user_agent_hash+"/geospatial-data/beginner/6A/";
+        
+      var body = d3.select("body");
+      var svg = body.append("svg")
+        .attr("width", 700)
+        .attr("height", 400); // 500
+
+      // possible terms to be sorted
+      var terms = ["Elevation","Soil Type","Air Temperature at the Ground Surface","Cars","Mailboxes","Railway Tracks"];
+
+      // counters for bin terms
+      iLeft = 1;
+      iRight = 1;
+
+      var checked = false;
+
+      // final message (hidden until complete)
+      var finish = svg.append("text")
+        .text("")
+        .attr("x", 80)
+        .attr("y", 100)
+        .attr("font-size", 20)
+        .attr("fill-opacity", 0)
+        .style("fill", "#32C90F");
+
+      // response message
+      var msg = body.append("p").text("");
+
+      var drag = d3.drag()
+        .on("start", function () {
+          var cur = d3.select(this);
+          dx = cur.attr("x") - d3.event.x;
+          dy = cur.attr("y") - d3.event.y;
+        })
+        .on("drag", function() {
+          d3.select(this)
+            .attr("x", d3.event.x + dx)
+            .attr("y", d3.event.y + dy);
+        })
+        // check solution for current word
+        .on("end", function() {
+          d3.select(this)
+            .attr("x", d3.event.x + dx)
+            .attr("y", d3.event.y + dy);
+
+          var x = d3.select(this).attr("x");
+          var y = d3.select(this).attr("y");
+          var text = d3.select(this).select("text")._groups[0][0].innerHTML;
+
+          // prevent out of bounds
+          if (x < -175) {
+            d3.select(this).attr("x", -175);
+            checked = true;
+            checkLeft(text);
+          }
+          if (x > 175) {
+            d3.select(this).attr("x", 175);
+            checked = true;
+            checkRight(text);
+          }
+          if (y < -60) {
+            d3.select(this).attr("y", -60);
+          }
+          if (y > 370) {
+            d3.select(this).attr("y", 370);
+          }
+
+          // console.log(x); console.log(y);
+
+          if (!checked) {
+            // check solution: left bin
+            if (x >= -310 && x <= -60 && y <= 350 && y >= 100) {
+              checkLeft(text);
+            }
+            // check solution: right bin
+            if (x >= 60 && x <= 380 && y <= 350 && y >= 100) {
+              checkRight(text);
+            }
+            checked = false;
+          }
+        });
+
+      // left bin: fields
+      svg.append("rect")
+        .attr("width", 330)
+        .attr("height", 200)
+        .attr("x", 5)
+        .attr("y", 170)
+        .attr("fill", "none")
+        .attr("stroke", "blue")
+        .attr("stroke-width", "4px");
+      // bin title
+      svg.append("text")
+        .text("Fields")
+        .attr("x", 80)
+        .attr("y", 205)
+        .attr("fill", "blue")
+        .attr("font-size", 26);
+      // slots (empty until filled)
+      svg.append("text")
+        .text("")
+        .attr("id", "left1")
+        .attr("text-anchor", "middle")
+        .attr("x", 170)
+        .attr("y", 250)
+        .attr("fill", "blue")
+        .attr("font-size", 16);
+      svg.append("text")
+        .text("")
+        .attr("id", "left2")
+        .attr("text-anchor", "middle")
+        .attr("x", 170)
+        .attr("y", 280)
+        .attr("fill", "blue")
+        .attr("font-size", 16);
+      svg.append("text")
+        .text("")
+        .attr("id", "left3")
+        .attr("text-anchor", "middle")
+        .attr("x", 170)
+        .attr("y", 310)
+        .attr("fill", "blue")
+        .attr("font-size", 16);
+
+
+      // right bin: objects
+      svg.append("rect")
+        .attr("width", 330)
+        .attr("height", 200)
+        .attr("x", 345)
+        .attr("y", 170)
+        .attr("fill", "none")
+        .attr("stroke", "red")
+        .attr("stroke-width", "4px");
+      // bin title
+      svg.append("text")
+        .text("Objects")
+        .attr("x", 395)
+        .attr("y", 205)
+        .attr("fill", "red")
+        .attr("font-size", 26);
+      // slots (empty until filled)
+      svg.append("text")
+        .text("")
+        .attr("id", "right1")
+        .attr("text-anchor", "middle")
+        .attr("x", 510)
+        .attr("y", 250)
+        .attr("fill", "red")
+        .attr("font-size", 16);
+      svg.append("text")
+        .text("")
+        .attr("id", "right2")
+        .attr("text-anchor", "middle")
+        .attr("x", 510)
+        .attr("y", 280)
+        .attr("fill", "red")
+        .attr("font-size", 16);
+      svg.append("text")
+        .text("")
+        .attr("id", "right3")
+        .attr("text-anchor", "middle")
+        .attr("x", 510)
+        .attr("y", 310)
+        .attr("fill", "red")
+        .attr("font-size", 16);
+
+      // draw term from "deck" for placement
+      function drawCard() {
+        d3.selectAll(".drawn")
+          .transition().duration(800)
+            .attr("fill-opacity", 0)
+            .attr("stroke-opacity", 0)
+          .remove();
+
+        // draw random term from selection
+        var t = terms[Math.floor(Math.random() * terms.length)];
+
+        // nested SVG for drag translation
+        var card = svg.append("svg").classed("card", true);
+
+        // while terms are still left in array, draw card
+        if (terms && terms.length) {
+          // card frame
+          card.append("rect")
+            .classed("drawn", true)
+            .attr("width", 320)
+            .attr("height", 50)
+            .attr("x", 180)
+            .attr("y", 70)
+            .attr("fill", "white")
+            .attr("stroke", "black")
+            .attr("fill-opacity", 1)
+            .attr("stroke-opacity", 1)
+            .attr("stroke-width", "4px");
+
+          // card text
+          card.append("text")
+            .classed("drawn", true)
+            .text(t)
+            .attr("text-anchor", "middle")
+            .attr("fill-opacity", 1)
+            .attr("stroke-opacity", 1)
+            .attr("x", 340)
+            .attr("y", 100);
+        } else {
+          finish.transition().duration(800)
+            .text("Congratulations! You've properly sorted things.")
+            .attr("fill-opacity", 1);
+        }
+
+        // remove selected element from array
+        terms = terms.filter(function(item) { return item !== t; });
+
+        // enable dragging of the card
+        drag(d3.selectAll(".card"));
+      }
+
+      function fillLeft(e) {
+        d3.select("#left" + iLeft).text(e);
+        iLeft++;
+      }
+
+      function fillRight(e) {
+        d3.select("#right" + iRight).text(e);
+        iRight++;
+      }
+       
+        
+      // logging: log "False" when drag to the incorrect space
+      function incorrect_logging() {
+        // log "False" when click incorrect space
+        answer = false;
+        url = url_pre+answer;
+        // $.get(url)
+        $.ajax({
+          type: 'GET',
+          url: url,
+          success: function() {
+            console.log("Answer is false");
+          },
+          error: function() {
+            alert("Error");
+          }
+        });
+      }
+        
+      // logging: log "True" when drag to the correct space
+      function correct_logging() {
+        answer = true;
+        url = url_pre+answer;
+        // $.get(url)
+        $.ajax({
+          type: 'GET',
+          url: url,
+          success: function() {
+            console.log("Answer is true");
+          },
+          error: function() {
+             alert("Error");
+          }
+        });
+      
+      }
+
+      // left bin solution checking
+      function checkLeft(e) {
+        if (e === "Cars") {
+          msg.transition().duration(800).text("No, cars are not fields. Try again!")
+            .style("color", "red");
+          incorrect_logging();
+        } else if (e === "Mailboxes") {
+          msg.transition().duration(800).text("No, mailboxes are not fields. Try again!")
+            .style("color", "red");
+          incorrect_logging();
+        } else if (e === "Railway Tracks") {
+          msg.transition().duration(800).text("No, railway tracks are not fields. Try again!")
+            .style("color", "red");
+          incorrect_logging();
+        } else if (e === "Elevation") {
+          msg.transition().duration(800).text("Correct! Elevation is a field.")
+            .style("color", "#32C90F");
+          drawCard();
+          fillLeft(e);
+          correct_logging();
+        } else if (e === "Soil Type") {
+          msg.transition().duration(800).text("Correct! Soil type is a field.")
+            .style("color", "#32C90F");
+          drawCard();
+          fillLeft(e);
+          correct_logging();
+        } else if (e === "Air Temperature at the Ground Surface") {
+          msg.transition().duration(800).text("Correct! Air temperature at the ground surface is a field.")
+            .style("color", "#32C90F");
+          drawCard();
+          fillLeft(e);
+          correct_logging();
+        } 
+      }
+
+      // right bin solution checking
+      function checkRight(e) {
+        if (e === "Cars") {
+          msg.transition().duration(800).text("Correct! Cars are objects.")
+            .style("color", "#32C90F");
+          drawCard();
+          fillRight(e);
+          correct_logging();
+        } else if (e === "Mailboxes") {
+          msg.transition().duration(800).text("Correct! Mailboxes are objects.")
+            .style("color", "#32C90F");
+          drawCard();
+          fillRight(e);
+          correct_logging();
+        } else if (e === "Railway Tracks") {
+          msg.transition().duration(800).text("Correct! Railway tracks are objects.")
+            .style("color", "#32C90F");
+          drawCard();
+          fillRight(e);
+          correct_logging();
+        } else if (e === "Elevation") {
+          msg.transition().duration(800).text("No, elevation is not an object. Try again!")
+            .style("color", "red");
+          incorrect_logging();
+        } else if (e === "Soil Type") {
+          msg.transition().duration(800).text("No, soil type is not an object. Try again!")
+            .style("color", "red");
+          incorrect_logging();
+        } else if (e === "Air Temperature at the Ground Surface") {
+          msg.transition().duration(800).text("No, air temperature at the ground surfaces is not an object. Try again!")
+            .style("color", "red");
+          incorrect_logging();
+        } 
+      }
+
+      // draw first card
+      drawCard();
+    </script>
+  </body>
+</html>

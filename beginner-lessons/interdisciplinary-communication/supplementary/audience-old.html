@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <title>D3 Audience Sort</title>
+
+    <!-- load D3 -->
+    <script src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+      
+    <!-- logging: load jQuery (bundled with Jupyter; only needed outside of Jupyter) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- logging: load jQuery md5 plugin -->
+    <script src="https://rawcdn.githack.com/placemarker/jQuery-MD5/b985fce4e867773e5fb7a29b4fb5df74c53595d0/jquery.md5.js"></script>
+
+    <!-- global styles -->
+    <style>
+      body  { font-family: Helvetica; }
+      svg   { -moz-user-select: none;
+              -webkit-user-select: none;
+              -ms-user-select: none;
+              user-select: none;
+            }
+    </style>
+  </head>
+
+  <body>
+    <script>
+      // variables for logging
+      var username = location.href.split('/')[4];
+      var username_hash = $.md5(username);
+      var user_agent_hash = $.md5(navigator.userAgent);
+      var answer
+      var url_pre = "https://check.hourofci.org:4000/"+user_agent_hash+"/interdisciplinary-communication/beginner/3D/";
+        
+      var body = d3.select("body");
+      var svg = body.append("svg")
+        .attr("width", 700)
+        .attr("height", 700);
+
+      // possible statements to be sorted
+      var statements = ["We built this decision-tree method based on the stochastic nature of the underlying fundamentals of known spatio-temporal interactions between objects of this type and character.",
+                        "Let's define that term: heterogeneous. It means when something is made up of diverse components, or things that are dissimilar in nature.",
+                        "I'm in the field of Geographic Information Science, or GIS - I work with spatial data for analysis and presentation.",
+                        "The resulting features, thiessen polygons, represent areas nearest the points based on proximity: the same idea behind the voronoi diagram in math.",
+                        "As we know from Anselin's work in spatial statistics, the I statistic allows us to identify spatial clusters of features with high or low values.",
+                        "Now, when I say 'high performance computing', what does that mean to you?"];
+
+      // final message (hidden until complete)
+      var finish = svg.append("text")
+        .attr("y", 100)
+        .attr("font-size", 16)
+        .attr("fill-opacity", 0)
+        .style("fill", "#32C90F");
+      finish.append("tspan")
+        .text("Nice job! You properly sorted each of the statements.")
+        .attr("text-anchor", "middle")
+        .attr("font-size", 20)
+        .attr("x", 340)
+        .attr("dy", "-60px");
+      finish.append("tspan")
+        .text("Your choice of words matters in this communication.")
+        .attr("text-anchor", "middle")
+        .attr("x", 340)
+        .attr("dy", "40px");
+      finish.append("tspan")
+        .text("Context is incredibly important for understanding the best way to communicate,")
+        .attr("text-anchor", "middle")
+        .attr("x", 340)
+        .attr("dy", "22px");
+      finish.append("tspan")
+        .text("and there are impacts of those choices in communicating with different audiences.")
+        .attr("text-anchor", "middle")
+        .attr("x", 340)
+        .attr("dy", "22px");
+
+      // response message
+      var msg = body.append("p").text("Drag the black box to one of the four boxes below it.");
+
+      var drag = d3.drag()
+        .on("start", function () {
+          var cur = d3.select(this);
+          dx = cur.attr("x") - d3.event.x;
+          dy = cur.attr("y") - d3.event.y;
+        })
+        .on("drag", function() {
+          d3.select(this)
+            .attr("x", d3.event.x + dx)
+            .attr("y", d3.event.y + dy);
+        })
+        // check solution for current word
+        .on("end", function() {
+          d3.select(this)
+            .attr("x", d3.event.x + dx)
+            .attr("y", d3.event.y + dy);
+
+          var x = d3.select(this).attr("x");
+          var y = d3.select(this).attr("y");
+          var text = d3.select(this).select("text").select("tspan")._groups[0][0].innerHTML;
+          var first = text.split(" ")[2];
+
+          // prevent out of bounds
+          if (x < -125) {
+            d3.select(this).attr("x", -125);
+          }
+          if (x > 125) {
+            d3.select(this).attr("x", 125);
+          }
+          if (y < -50) {
+            d3.select(this).attr("y", -50);
+          }
+          if (y > 540) {
+            d3.select(this).attr("y", 540);
+          }
+
+          // check solution: experts in the field
+          if (x >= -590 && x <= -130 && y <= 320 && y >= 40) {
+            checkEF(first);
+          }
+          // check solution: introductory class
+          if (x >= 140 && x <= 580 && y <= 320 && y >= 40) {
+            checkIC(first);
+          }
+          // check solution: casual conversation
+          if (x >= -590 && x <= -130 && y <= 600 && y >= 340) {
+            checkCC(first);
+          }
+          // check solution: experts in a different field
+          if (x >= 140 && x <= 580 && y <= 600 && y >= 340) {
+            checkEDF(first);
+          }
+        });
+
+        // top left bin: experts in the field
+        svg.append("rect")
+          .attr("width", 330)
+          .attr("height", 240)
+          .attr("x", 5)
+          .attr("y", 170)
+          .attr("fill", "none")
+          .attr("stroke", "blue")
+          .attr("stroke-width", "4px");
+        // bin title
+        svg.append("text")
+          .text("Experts in the Field")
+          .attr("x", 60)
+          .attr("y", 295)
+          .attr("fill", "blue")
+          .attr("font-size", 26);
+
+        // top right bin: Introductory Class
+        svg.append("rect")
+          .attr("width", 330)
+          .attr("height", 240)
+          .attr("x", 345)
+          .attr("y", 170)
+          .attr("fill", "none")
+          .attr("stroke", "red")
+          .attr("stroke-width", "4px");
+        // bin title
+        svg.append("text")
+          .text("Introductory Class")
+          .attr("x", 410)
+          .attr("y", 295)
+          .attr("fill", "red")
+          .attr("font-size", 26);
+
+        // bottom left bin: Casual Conversation
+        svg.append("rect")
+          .attr("width", 330)
+          .attr("height", 240)
+          .attr("x", 5)
+          .attr("y", 420)
+          .attr("fill", "none")
+          .attr("stroke", "purple")
+          .attr("stroke-width", "4px");
+        // bin title
+        svg.append("text")
+          .text("Casual Conversation")
+          .attr("x", 50)
+          .attr("y", 540)
+          .attr("fill", "purple")
+          .attr("font-size", 26);
+
+        // bottom right bin: Experts in a Different Field
+        svg.append("rect")
+          .attr("width", 330)
+          .attr("height", 240)
+          .attr("x", 345)
+          .attr("y", 420)
+          .attr("fill", "none")
+          .attr("stroke", "green")
+          .attr("stroke-width", "4px");
+        // bin title
+        svg.append("text")
+          .text("Experts in a Different Field")
+          .attr("x", 360)
+          .attr("y", 540)
+          .attr("fill", "green")
+          .attr("font-size", 26);
+
+        // draw statement from "deck" for placement
+        function drawCard() {
+          d3.selectAll(".drawn")
+            .transition().duration(800)
+              .attr("fill-opacity", 0)
+              .attr("stroke-opacity", 0)
+            .remove();
+
+          // draw random term from selection
+          var s = statements[Math.floor(Math.random() * statements.length)];
+
+          // nested SVG for drag translation
+          var card = svg.append("svg").classed("card", true);
+
+          // while terms are still left in array, draw card
+          if (statements && statements.length) {
+            // card frame
+            card.append("rect")
+              .classed("drawn", true)
+              .attr("width", 420)
+              .attr("height", 90)
+              .attr("x", 130)
+              .attr("y", 60)
+              .attr("fill", "white")
+              .attr("stroke", "black")
+              .attr("fill-opacity", 1)
+              .attr("stroke-opacity", 1)
+              .attr("stroke-width", "4px");
+
+            // card text
+            text = card.append("text")
+              .classed("drawn", true)
+              .attr("text-anchor", "middle")
+              .attr("stroke-opacity", 1)
+              .attr("fill-opacity", 1)
+              .attr("x", 340)
+              .attr("y", 100);
+
+            // split statement into multiple lines
+            var split = s.split(" ");
+            var s1 = " ";
+            var s2 = " ";
+            var s3 = " ";
+            var s4 = " ";
+            for (i = 0; i < 6; i++) {
+              s1 += " " + split[i];
+            }
+            for (i = 6; i < 12; i++) {
+              if (split[i]) {
+                s2 += " " + split[i];
+              }
+            }
+            for (i = 12; i < 17; i++) {
+              if (split[i]) {
+                s3 += " " + split[i];
+              }
+            }
+            for (i = 17; i < s.length; i++) {
+              if (split[i]) {
+                s4 += " " + split[i];
+              }
+            }
+
+            // substring 1
+            text.append("tspan")
+              .text(s1)
+              .attr("x", 340)
+              .attr("dy", "-20px");
+            // substring 2
+            text.append("tspan")
+              .text(s2)
+              .attr("x", 340)
+              .attr("dy", "20px");
+            // substring 3
+            text.append("tspan")
+              .text(s3)
+              .attr("x", 340)
+              .attr("dy", "20px");
+            // substring 4
+            text.append("tspan")
+              .text(s4)
+              .attr("x", 340)
+              .attr("dy", "20px");
+          } else {
+            finish.transition().duration(800)
+              .attr("fill-opacity", 1);
+          }
+
+          // remove selected element from array
+          statements = statements.filter(function(item) { return item !== s; });
+
+          // enable dragging of the card
+          drag(d3.selectAll(".card"));
+        }
+
+        // logging: log "False" when drag to the incorrect space
+        function incorrect_logging() {
+          // log "False" when click incorrect space
+          answer = false;
+          url = url_pre+answer;
+          // $.get(url)
+          $.ajax({
+            type: 'GET',
+            url: url,
+            success: function() {
+              console.log("Answer is false");
+            },
+            error: function() {
+              alert("Error");
+            }
+          });
+        }
+        
+        // logging: log "True" when drag to the correct space
+        function correct_logging() {
+          answer = true;
+          url = url_pre+answer;
+          // $.get(url)
+          $.ajax({
+            type: 'GET',
+            url: url,
+            success: function() {
+              console.log("Answer is true");
+            },
+            error: function() {
+              alert("Error");
+            }
+          });
+        }
+        
+        // top left bin solution checking
+        function checkEF(e) {
+          if (e === "We") {
+            msg.transition().duration(800).text("Very good! Experts in the field should be best equipped to parse this statement.")
+              .style("color", "#32C90F");
+            drawCard();
+            correct_logging();
+          } else if (e === "Let's") {
+            msg.transition().duration(800).text("Try again! This statement might be too simplified for this group.")
+              .style("color", "red");
+            incorrect_logging();
+          } else if (e === "I'm") {
+            msg.transition().duration(800).text("Try again! This statement might be too simple or obvious for this group.")
+              .style("color", "red");
+            incorrect_logging();
+          } else if (e === "The") {
+            msg.transition().duration(800).text("Very good! Connecting a piece of jargon to another domain's jargon can easily bridge gaps between different bases of expertise.")
+              .style("color", "#32C90F");
+            drawCard();
+            correct_logging();
+          } else if (e === "As") {
+            msg.transition().duration(800).text("Very good! Use of names of theorists, researchers, or authors are often pointers for expertise.")
+              .style("color", "#32C90F");
+            drawCard();
+            correct_logging();
+          } else if (e === "Now,") {
+            msg.transition().duration(800).text("Very good! An invitation to conversation on a particularly troublesome term can lead to a better understanding of what the background of your audience might be.")
+              .style("color", "#32C90F");
+            drawCard();
+            correct_logging();
+          }
+        }
+
+        // top right bin solution checking
+        function checkIC(e) {
+          if (e === "We") {
+            msg.transition().duration(800).text("Try Again! This statement probably wouldn't be understandable to this group.")
+              .style("color", "red");
+            incorrect_logging();
+          } else if (e === "Let's") {
+            msg.transition().duration(800).text("Very good! Defining the term broadly helps non-experts in a given domain.")
+              .style("color", "#32C90F");
+            drawCard();
+            correct_logging();
+          } else if (e === "I'm") {
+            msg.transition().duration(800).text("Very good! Defining the term broadly and giving examples helps non-experts in a given domain.")
+              .style("color", "#32C90F");
+            drawCard();
+            correct_logging();
+          } else if (e === "The") {
+            msg.transition().duration(800).text("Try Again! This statement probably wouldn't be understandable to this group.")
+              .style("color", "red");
+            incorrect_logging();
+          } else if (e === "As") {
+            msg.transition().duration(800).text("Try Again! This statement probably wouldn't be understandable to this group.")
+              .style("color", "red");
+            incorrect_logging();
+          } else if (e === "Now,") {
+            msg.transition().duration(800).text("Very good! An invitation to conversation on a particularly troublesome term can lead to a better understanding of what the background of your audience might be.")
+              .style("color", "#32C90F");
+            drawCard();
+            correct_logging();
+          }
+        }
+
+        // bottom left bin solution checking
+        function checkCC(e) {
+          if (e === "We") {
+            msg.transition().duration(800).text("Try Again! This statement probably wouldn't be understandable to this group.")
+              .style("color", "red");
+            incorrect_logging();
+          } else if (e === "Let's") {
+            msg.transition().duration(800).text("Very good! Defining the term broadly helps non-experts in a given domain.")
+              .style("color", "#32C90F");
+            drawCard();
+            correct_logging();
+          } else if (e === "I'm") {
+            msg.transition().duration(800).text("Very good! Defining the term broadly and giving examples helps non-experts in a given domain.")
+              .style("color", "#32C90F");
+            drawCard();
+            correct_logging();
+          } else if (e === "The") {
+            msg.transition().duration(800).text("Try Again! This statement probably wouldn't be understandable to this group.")
+              .style("color", "red");
+            incorrect_logging();
+          } else if (e === "As") {
+            msg.transition().duration(800).text("Try Again! This statement probably wouldn't be understandable to this group.")
+              .style("color", "red");
+            incorrect_logging();
+          } else if (e === "Now,") {
+            msg.transition().duration(800).text("Very good! An invitation to conversation on a particularly troublesome term can lead to a better understanding of what the background of your audience might be.")
+              .style("color", "#32C90F");
+            drawCard();
+            correct_logging();
+          }
+        }
+
+        // bottom right bin solution checking
+        function checkEDF(e) {
+          if (e === "We") {
+            msg.transition().duration(800).text("Try Again! This statement probably wouldn't be understandable to this group.")
+              .style("color", "red");
+            incorrect_logging();
+          } else if (e === "Let's") {
+            msg.transition().duration(800).text("Very good! Defining the term broadly helps non-experts in a given domain.")
+              .style("color", "#32C90F");
+            drawCard();
+            correct_logging();
+          } else if (e === "I'm") {
+            msg.transition().duration(800).text("Very good! Defining the term broadly and giving examples helps non-experts in a given domain.")
+              .style("color", "#32C90F");
+            drawCard();
+            correct_logging();
+          } else if (e === "The") {
+            msg.transition().duration(800).text("Very good! Connecting a piece of jargon to another domain's jargon can easily bridge gaps between different bases of expertise.")
+              .style("color", "#32C90F");
+            drawCard();
+            correct_logging();
+          } else if (e === "As") {
+            msg.transition().duration(800).text("Try Again! This statement probably wouldn't be understandable to this group.")
+              .style("color", "red");
+            incorrect_logging();
+          } else if (e === "Now,") {
+            msg.transition().duration(800).text("Very good! An invitation to conversation on a particularly troublesome term can lead to a better understanding of what the background of your audience might be.")
+              .style("color", "#32C90F");
+            drawCard();
+            correct_logging();
+          }
+        }
+
+        // draw first card
+        drawCard();
+    </script>
+  </body>
+</html>

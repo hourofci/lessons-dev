@@ -7,6 +7,12 @@
 
     <!-- load D3 -->
     <script src="https://rawcdn.githack.com/coopbri/hci-binder/362464110b5273593e9fdd1dc1c0ae3e4f1da224/lib/d3.min.js"></script>
+      
+    <!-- logging: load jQuery (bundled with Jupyter; only needed outside of Jupyter) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- logging: load jQuery md5 plugin -->
+    <script src="https://rawcdn.githack.com/placemarker/jQuery-MD5/b985fce4e867773e5fb7a29b4fb5df74c53595d0/jquery.md5.js"></script>
 
     <!-- global styles -->
     <style>
@@ -20,16 +26,60 @@
 
   <body>
     <script>
+      // variables for logging
+      var user_agent_hash = $.md5(navigator.userAgent);
+      var answer
+      var url_pre = "https://check.hourofci.org:4000/"+user_agent_hash+"/geospatial-data/beginner/4F/";
+        
       var body = d3.select("body");
       var svg = body.append("svg")
-        .attr("width", 600).attr("height", 500);
+        .attr("width", 950).attr("height", 500); // width: 600
       var img = svg.append("image")
         .attr("href", "https://rawcdn.githack.com/coopbri/hci-binder/0a0f8e02e3a3e7429f881b69634200d671c0f560/notebooks/geospatial-data/supplementary/gd-image-6.png");
       var success = false;
+        
+      // logging: log "False" when drag to the incorrect space
+      function incorrect_logging() {
+        // log "False" when click incorrect space
+        answer = false
+        url = url_pre+answer;
+        // $.get(url)
+        $.ajax({
+          type: 'GET',
+          url: url,
+          success: function() {
+            console.log("Answer is false");
+          },
+          error: function() {
+            alert("Error");
+          }
+        });
+      }
+        
+      // logging: log "True" when drag to the correct space
+      function correct_logging() {
+        answer = true;
+        url = url_pre+answer;
+        // $.get(url)
+        $.ajax({
+          type: 'GET',
+          url: url,
+          success: function() {
+            console.log("Answer is true");
+          },
+          error: function() {
+             alert("Error");
+          }
+        });
+      }
 
       svg.on("click", function() {
         var x = d3.event.x;
         var y = d3.event.y;
+        
+        if (!(x > 405 && x < 425) || !(y > 219 && y < 239)) {
+            incorrect_logging();
+        }
 
         if (x > 405 && x < 425) {
           if (y > 219 && y < 239) {
@@ -44,30 +94,31 @@
               .attr("stroke-width", "4px")
 
             if (!success) {
+              correct_logging();
               // draw success message once
               success = true;
               svg.append("text").text("Congrats! You intuitively used the")
-              .attr("x", 130)
-              .attr("y", 470)
-              .attr("fill", "lawngreen")
-              .attr("font-size", 24)
+              .attr("x", 600) // 200
+              .attr("y", 200) // 470
+              .attr("fill", "black")
+              .attr("font-size", 20)
               .transition().duration(800)
               .attr("stroke-opacity", 1)
               .attr("fill-opacity", 1);
               svg.append("text").text("World Geodetic System")
-              .attr("x", 50)
-              .attr("y", 495)
-              .attr("fill", "lawngreen")
-              .attr("font-size", 24)
+              .attr("x", 600) // 80
+              .attr("y", 250) // 495
+              .attr("fill", "black")
+              .attr("font-size", 20)
               .attr("font-weight", "bold")
               .transition().duration(800)
               .attr("stroke-opacity", 1)
               .attr("fill-opacity", 1);
               svg.append("text").text("to find the hippo family.")
-              .attr("x", 325)
-              .attr("y", 495)
-              .attr("fill", "lawngreen")
-              .attr("font-size", 24)
+              .attr("x", 600) // 310
+              .attr("y", 300) // 495
+              .attr("fill", "black")
+              .attr("font-size", 20)
               .transition().duration(800)
               .attr("stroke-opacity", 1)
               .attr("fill-opacity", 1);
