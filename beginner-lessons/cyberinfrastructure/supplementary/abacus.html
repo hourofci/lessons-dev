@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+
+    <title>D3 Abacus</title>
+
+    <!-- load D3 -->
+    <script src="https://raw.githack.com/hourofci/lessons-dev/master/supplementary/js/d3.v6.min.js"></script>
+
+    <!-- uncomment below to load D3 from internet -->
+    <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
+
+    <!-- global styles -->
+    <style>
+      body { font-family: "Courier New", Courier, monospace;
+             font-size: 27px;
+             color: #282828;
+             font-weight: 600;
+             -moz-user-select: none;
+             -webkit-user-select: none;
+             -ms-user-select: none;
+             user-select: none; }
+      p    { display: inline;
+             margin: 0 26.8px 0;
+             vertical-align: center; }
+    </style>
+  </head>
+
+  <body>
+    <script>
+      var body = d3.select("body");
+      var svg = body.append("svg")
+        .attr("width", 560)
+        .attr("height", 410);
+      var background = svg.append("svg:image")
+        .attr("xlink:href", "https://raw.githack.com/hourofci/lessons-dev/master/beginner-lessons/cyberinfrastructure/supplementary/abacus-bg.svg")
+        .attr("width", 560)
+        .attr("height", 410)
+        .style("pointer-events", "none")
+        .style("opacity", 0.15);
+
+      function grid() {
+        var grid = new Array();
+        var xpos = 10;
+        var ypos = 8;
+        var width = 50;
+        var height = 35;
+
+        // draw top beads
+        for (var row = 0; row < 2; row++) {
+          for (var column = 0; column < 8; column++) {
+            grid.push( new Array());
+            grid[column].push({
+              x: xpos,
+              y: ypos,
+              width: width,
+              height: height,
+              state: "down",
+              type: "top",
+            })
+            xpos += width+20;
+          }
+          // reset x
+          xpos = 10;
+          ypos += height+10;
+        }
+
+        // separate top rows from bottom rows (buffer)
+        ypos += 90;
+
+        // draw bottom beads
+        for (var row = 0; row < 5; row++) {
+          grid.push( new Array());
+          for (var column = 0; column < 8; column++) {
+            grid[column].push({
+              x: xpos,
+              y: ypos,
+              width: width,
+              height: height,
+              state: "down",
+              type: "bottom",
+            })
+            xpos += width+20;
+          }
+          // reset x
+          xpos = 10;
+          ypos += height+10;
+        }
+        return grid;
+      } // end grid generation function
+
+      var beadGrid = grid();
+
+      var row = svg.selectAll(".row")
+        .data(beadGrid)
+        .enter().append("g")
+        .attr("class", function (d,i) { return "row" + i; });
+
+      var column = row.selectAll(".square")
+        .data(function (d) { return d; })
+        .enter().append("rect")
+        .attr("x", function (d) { return d.x; })
+        .attr("y", function (d) { return d.y; })
+        .attr("width", function (d) { return d.width; })
+        .attr("height", function (d) { return d.height; })
+        .attr("id", function (d, i) {
+          if (d.type === "top") {
+            return "top" + i;
+          } else {
+            return i - 2; // index from 0, account for top beads
+          }
+        })
+        .classed("down", true)
+        .classed("up", false)
+        .style("rx", "8px")
+        .style("fill", function (d) {
+          if (d.type === "top") {
+            return "#85B1FF";
+          } else if (d.type === "bottom") {
+            return "#AAF3ED";
+          }
+        })
+        .style("stroke", "#868686")
+        .on("click", function (d) {
+          var offset = 45;
+
+          // current bead selection
+          var current = this;
+
+          var g = d3.select(this.parentNode);
+          // beads above current selection
+          var above = g.selectAll("rect").filter(function () {
+            if (d.type === "bottom") {
+              while (this.id !== "top0" && this.id !== "top1") {
+                return (this.id < current.id);
+              }
+            } else { return this.id === "top1"; }
+          });
+          // beads below current selection
+          var below = g.selectAll("rect").filter(function () {
+            if (d.type === "bottom") {
+              while (this.id !== "top0" && this.id !== "top1") {
+                return (this.id > current.id);
+              }
+            } else { return this.id === "top0"; }
+          });
+
+          // bottom bead triggers
+          if (d.type === "bottom") {
+            if (d.state === "down") {
+              d3.select(this).classed("down", false).classed("up", true).transition()
+                .attr("y", function (d) { return d.y-offset; });
+
+              // move above beads up
+              above.classed("down", false).classed("up", true).transition()
+                .attr("y", function (d) { d.state = "up"; return d.y-offset; });
+
+              d.state = "up";
+            } else if (d.state === "up") {
+              d3.select(this).classed("down", true).classed("up", false).transition()
+                .attr("y", function (d) { return d.y; });
+
+              // move below beads down
+              below.classed("down", true).classed("up", false).transition()
+                .attr("y", function (d) { d.state = "down"; return d.y; });
+
+              d.state = "down";
+            }
+          // top bead triggers
+          } else {
+            if (d.state === "down") {
+              d3.select(this).classed("down", false).classed("up", true).transition()
+                .attr("y", function (d) { return d.y+offset; });
+
+              // move above beads up
+              above.classed("down", false).classed("up", true).transition()
+                .attr("y", function (d) { d.state = "up"; return d.y+offset; });
+
+              d.state = "up";
+            } else if (d.state === "up") {
+              d3.select(this).classed("down", true).classed("up", false).transition()
+                .attr("y", function (d) { return d.y; });
+
+              // move below beads down
+              below.classed("down", true).classed("up", false).transition()
+                .attr("y", function (d) { d.state = "down"; return d.y; });
+
+              d.state = "down";
+            }
+          }
+          update(g.attr("class"));
+        }); // end onclick event
+
+      // display column value
+      function update(identifier) {
+        var g = d3.select("." + identifier);
+        var value = g.selectAll("rect").filter(function (d) {
+          return (d3.select(this).attr("class") === "up");
+        }).size();
+
+        body.select("#counter" + identifier)
+          .text(function () {
+            if (g.selectAll("#top0").attr("class") === "up") {
+              value += 4;
+            }
+            if (g.selectAll("#top1").attr("class") === "up") {
+              value += 4;
+            }
+
+            // convert values > 9 to letters
+            if (value > 9) {
+              switch(value) {
+                case 10:
+                  value = "a";
+                  break;
+                case 11:
+                  value = "b";
+                  break;
+                case 12:
+                  value = "c";
+                  break;
+                case 13:
+                  value = "d";
+                  break;
+                case 14:
+                  value = "e";
+                  break;
+                case 15:
+                  value = "f";
+                  break;
+                default:
+                  break;
+              }
+            }
+            return value;
+          })
+      } // end update function
+
+      body.append("br");
+
+      // add column value counters
+      body.append("p").text(0).attr("id", "counterrow0");
+      body.append("p").text(0).attr("id", "counterrow1");
+      body.append("p").text(0).attr("id", "counterrow2");
+      body.append("p").text(0).attr("id", "counterrow3");
+      body.append("p").text(0).attr("id", "counterrow4");
+      body.append("p").text(0).attr("id", "counterrow5");
+      body.append("p").text(0).attr("id", "counterrow6");
+      body.append("p").text(0).attr("id", "counterrow7");
+    </script>
+  </body>
+</html>
