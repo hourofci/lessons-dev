@@ -40,7 +40,7 @@
         .attr("height", 360); // 500
 
       // possible terms to be sorted
-      var terms = ["Public transit routes","Elevation in across a national park","Castles to visit in a country","COVID infection rates by state","Surface air temperature"];
+      var terms = ["Public transit routes","Elevation across a national park","Castles to visit in a country","COVID infection rates by state","Surface air temperature"];
 
       // counters for bin terms
       iLeft = 1;
@@ -238,7 +238,7 @@
             .attr("y", 100);
         } else {
           finish.transition().duration(800)
-            .text("Congratulations! You've properly choose data models.")
+            .text("Congratulations! You've properly chosen data models.")
             .attr("fill-opacity", 1);
         }
 
@@ -310,8 +310,8 @@
           msg.transition().duration(800).text("Try again!")
             .style("color", "red");
           incorrect_logging();
-        }else if (e === "Elevation in across a national park") {
-          msg.transition().duration(800).text("Correct! Elevation in across a national park is usually stored as rasters.")
+        }else if (e === "Elevation across a national park") {
+          msg.transition().duration(800).text("Correct! Elevation across a national park is usually stored as rasters.")
             .style("color", "#32C90F");
           drawCard();
           fillLeft(e);
@@ -345,7 +345,7 @@
           drawCard();
           fillRight(e);
           correct_logging();
-        }else if (e === "Elevation in across a national park") {
+        }else if (e === "Elevation across a national park") {
           msg.transition().duration(800).text("Try again!")
             .style("color", "red");
           incorrect_logging();
