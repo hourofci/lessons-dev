@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+path {
+  fill: none;
+  stroke: rgb(209, 10, 10);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+</style>
+<!--
+<center><h1>Drag to draw...</h1></center>
+<center><p>Mississipi River, Minneapolis, MN</p></center>
+-->
+<center>
+<svg width="900" height="650">
+    <image width = "900" height = "650" xlink:href = 'sma2_river_buffer.jpg' preserveAspectRatio = 'true' ></image>
+    <defs>
+        <mask id = "mask">
+<!--            <image width = '650px' height = '650px' xlink:href = 'river_buffer.jpg' preserveAspectRatio = 'true' ></image>-->
+        </mask>
+    </defs>
+    <path 
+  />
+  <rect  width="100%" height="100%" mask = 'url(#mask)'></rect>
+</svg>
+</center>
+
+<script src="http://d3js.org/d3.v4.min.js"></script>
+
+<script>
+
+
+
+
+var line = d3.line()
+    .curve(d3.curveBasis);
+
+
+var svg = d3.select("svg")
+    .call(d3.drag()
+        .container(function() { return this; })
+        .subject(function() { var p = [d3.event.x, d3.event.y]; return [p, p]; })
+        .on("start", dragstarted)
+        );
+    
+    svg.on("mouseover", function(d, i) {
+        d3.select(this).style("cursor", "cell") ;});
+    svg.on("mouseout", function(d, i) {
+        d3.select(this).style("cursor", "default");});
+    
+
+function dragstarted() {
+  var d = d3.event.subject,
+      active = svg.append("path").datum(d),
+      x0 = d3.event.x,
+      y0 = d3.event.y;
+
+
+  d3.event.on("drag", function() {
+    var x1 = d3.event.x,
+        y1 = d3.event.y,
+        dx = x1 - x0,
+        dy = y1 - y0;
+    
+    if (dx * dx + dy * dy > 100) d.push([x0 = x1, y0 = y1]);
+    else d[d.length - 1] = [x1, y1];
+    active.attr("d", line)
+
+  });
+}
+
+</script>
+
+
+
+
