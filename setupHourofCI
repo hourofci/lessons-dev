@@ -9,6 +9,13 @@ jupyter trust gateway-lesson/gateway/gateway-5.ipynb >> hci.log
 jupyter trust gateway-lesson/gateway/gateway-6.ipynb >> hci.log
 jupyter trust gateway-lesson/gateway/gateway-exploration.ipynb >> hci.log
 
+jupyter trust beginner-lessons/computational-thinking/ct-1.ipynb >> hci.log 
+jupyter trust beginner-lessons/computational-thinking/ct-2.ipynb >> hci.log 
+jupyter trust beginner-lessons/computational-thinking/ct-3.ipynb >> hci.log 
+jupyter trust beginner-lessons/computational-thinking/ct-4.ipynb >> hci.log 
+jupyter trust beginner-lessons/computational-thinking/ct-5.ipynb >> hci.log 
+jupyter trust beginner-lessons/computational-thinking/ct-6.ipynb >> hci.log 
+
 jupyter trust beginner-lessons/interdisciplinary-communication/ic-1.ipynb >> hci.log 
 jupyter trust beginner-lessons/interdisciplinary-communication/ic-2.ipynb >> hci.log 
 jupyter trust beginner-lessons/interdisciplinary-communication/ic-3.ipynb >> hci.log 
