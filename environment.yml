@@ -21,4 +21,8 @@ dependencies:
     - osmnx
     - earthpy
     - ipyleaflet
-
+presentation:
+  - pip:
+    - jupyter_contrib_nbextensions
+    - RISE
+    - jupyter-wysiwyg
