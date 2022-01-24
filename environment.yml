@@ -26,3 +26,11 @@ presentation:
     - jupyter_contrib_nbextensions
     - RISE
     - jupyter-wysiwyg
+  - postBuild
+    - jupyter contrib nbextension install --user
+    - jupyter nbextension enable widgetsnbextension  --py --user
+    - jupyter nbextension enable python-markdown/main  --py --user
+    - jupyter-nbextension install rise --py --user
+    - jupyter-nbextension enable rise  --py --user 
+    - jupyter-nbextension install jupyter_wysiwyg --py --user
+    - jupyter nbextension enable jupyter_wysiwyg  --py --user 
