@@ -17,4 +17,8 @@ dependencies:
     - folium
     - pysal
     - matplotlib
+    - matplotlib_scalebar
+    - osmnx
+    - earthpy
+    - ipyleaflet
 
