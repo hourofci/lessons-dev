@@ -1,4 +1,4 @@
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/mohsen-gis/lessons-dev/master)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://hub-binder.mybinder.ovh/user/mohsen-gis-lessons-dev-iaejeoxc/notebooks/beginner-lessons/spatial-modeling-analytics/Welcome.ipynb)
 # lessons-dev
 This is a working repository for the development and refinement of Hour of CI lessons. Lessons in this repository will likely be partially broken.
 
