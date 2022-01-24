@@ -11,6 +11,7 @@ dependencies:
   - rasterio
   
   - pip:
+    - jupyter_contrib_nbextensions
     - jupyterlab_scenes
     - numpy
     - pandas
