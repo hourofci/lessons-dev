@@ -6,6 +6,7 @@ dependencies:
   - python=3.7
   - pip
   - gdal
+  - rise
   - fiona  
   - rasterio
   - pip:
@@ -21,13 +22,13 @@ dependencies:
     - osmnx
     - earthpy
     - ipyleaflet
-presentation:
-  - pip:
-    - jupyter_contrib_nbextensions
-    - RISE
-  - postBuild
-    - jupyter contrib nbextension install --user
-    - jupyter nbextension enable widgetsnbextension  --py --user
-    - jupyter nbextension enable python-markdown/main  --py --user
-    - jupyter-nbextension install rise --py --user
-    - jupyter-nbextension enable rise  --py --user 
+# presentation:
+#   - pip:
+#     - jupyter_contrib_nbextensions
+#     - RISE
+#   - postBuild
+#     - jupyter contrib nbextension install --user
+#     - jupyter nbextension enable widgetsnbextension  --py --user
+#     - jupyter nbextension enable python-markdown/main  --py --user
+#     - jupyter-nbextension install rise --py --user
+#     - jupyter-nbextension enable rise  --py --user 
