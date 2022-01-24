@@ -9,6 +9,7 @@ dependencies:
   - rise
   - fiona  
   - rasterio
+  - jupyterlab_scenes
   - pip:
     - numpy
     - pandas
@@ -22,6 +23,7 @@ dependencies:
     - osmnx
     - earthpy
     - ipyleaflet
+    
 # presentation:
 #   - pip:
 #     - jupyter_contrib_nbextensions
