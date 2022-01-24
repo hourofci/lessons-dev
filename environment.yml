@@ -22,6 +22,8 @@ dependencies:
     - osmnx
     - earthpy
     - ipyleaflet
+    - textblob
+    - wordcloud
 # presentation:
 #   - pip:
 #     - jupyter_contrib_nbextensions
