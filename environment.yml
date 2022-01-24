@@ -30,9 +30,9 @@ presentation:
     
 #     - RISE
     
-#   - postBuild
-#     - jupyterlab_scenes
-#     - jupyter contrib nbextension install --user
+  - postBuild
+    - jupyterlab_scenes
+    - jupyter contrib nbextension install --user
 #     - jupyter nbextension enable widgetsnbextension  --py --user
 #     - jupyter nbextension enable python-markdown/main  --py --user
 #     - jupyter-nbextension install rise --py --user
