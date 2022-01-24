@@ -9,7 +9,6 @@ dependencies:
   - rise
   - fiona  
   - rasterio
-  - jupyterlab_scenes
   - pip:
     - numpy
     - pandas
@@ -24,11 +23,15 @@ dependencies:
     - earthpy
     - ipyleaflet
     
-# presentation:
-#   - pip:
-#     - jupyter_contrib_nbextensions
+presentation:
+  - pip:
+    - jupyter_contrib_nbextensions
+    - jupyterlab_scenes
+    
 #     - RISE
+    
 #   - postBuild
+#     - jupyterlab_scenes
 #     - jupyter contrib nbextension install --user
 #     - jupyter nbextension enable widgetsnbextension  --py --user
 #     - jupyter nbextension enable python-markdown/main  --py --user
