@@ -1,4 +1,11 @@
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/mohsen-gis/lessons-dev/master?filepath=beginner-lessons/spatial-modeling-analytics/Welcome.ipynb)
+Spatial Modeling and Analytics: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/mohsen-gis/lessons-dev/master?filepath=beginner-lessons/spatial-modeling-analytics/Welcome.ipynb)<br/>
+Computational Thinking Lesson: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/mohsen-gis/lessons-dev/master?filepath=beginner-lessons/computational-thinking/Welcome.ipynb) <br/>
+Interdisciplinary Communication: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/mohsen-gis/lessons-dev/master?filepath=beginner-lessons/interdisciplinary-communication/Welcome.ipynb)<br/>
+Geospatial Data: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/mohsen-gis/lessons-dev/master?filepath=beginner-lessons/geospatial-data/Welcome.ipynb)<br/>
+Cyberinfrastructure Lesson: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/mohsen-gis/lessons-dev/master?filepath=beginner-lessons/cyberinfrastructure/Welcome.ipynb) <br/>
+
+
+
 # lessons-dev
 This is a working repository for the development and refinement of Hour of CI lessons. Lessons in this repository will likely be partially broken.
 
