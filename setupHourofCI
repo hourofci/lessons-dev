@@ -39,14 +39,15 @@ jupyter trust beginner-lessons/cyberinfrastructure/cyberinfrastructure-3.ipynb >
 jupyter trust beginner-lessons/cyberinfrastructure/cyberinfrastructure-4.ipynb >> hci.log  
 jupyter trust beginner-lessons/cyberinfrastructure/cyberinfrastructure-5.ipynb >> hci.log  
 jupyter trust beginner-lessons/cyberinfrastructure/cyberinfrastructure-exploration.ipynb >> hci.log  
+jupyter trust beginner-lessons/spatial-modeling-analytics/sma-2.ipynb >> hci.log
 
+jupyter nbconvert --execute --inplace beginner-lessons/spatial-modeling-analytics/sma-2.ipynb >> hci.log
+jupyter trust beginner-lessons/spatial-modeling-analytics/sma-2.ipynb >> hci.log
+jupyter nbconvert --execute --inplace beginner-lessons/spatial-modeling-analytics/sma-3.ipynb >> hci.log
 
 jupyter trust beginner-lessons/spatial-modeling-analytics/sma-1.ipynb >> hci.log
 jupyter trust beginner-lessons/spatial-modeling-analytics/sma-2.ipynb >> hci.log
-jupyter nbconvert --execute --inplace beginner-lessons/spatial-modeling-analytics/sma-2.ipynb >> hci.log
-
 jupyter trust beginner-lessons/spatial-modeling-analytics/sma-3.ipynb >> hci.log
-jupyter nbconvert --execute --inplace beginner-lessons/spatial-modeling-analytics/sma-3.ipynb >> hci.log
 jupyter trust beginner-lessons/spatial-modeling-analytics/sma-4.ipynb >> hci.log
 jupyter trust beginner-lessons/spatial-modeling-analytics/sma-5.ipynb >> hci.log
 jupyter trust beginner-lessons/spatial-modeling-analytics/try_it1_sma.ipynb  >> hci.log
