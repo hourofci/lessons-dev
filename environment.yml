@@ -3,7 +3,7 @@ name: Lessons-dev MyBinder Test
 channels:
   - conda-forge
 dependencies:
-  - python=3.9.5
+  - python=3.9
   - pip
   - gdal
   - rise
